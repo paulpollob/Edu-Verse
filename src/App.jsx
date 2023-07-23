@@ -1,11 +1,17 @@
 
+import { Outlet } from 'react-router-dom'
 import './App.css'
+import Header from './Components/Header/Header'
+import Main from './Home'
 
 function App() {
 
 
   return (
-    <div>Hare Krishna</div>
+    <div>
+      <Header></Header>
+      <Outlet></Outlet>
+    </div>
   )
 }
 
