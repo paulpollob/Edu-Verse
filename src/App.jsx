@@ -7,10 +7,11 @@ import RightSideBar from './Components/Header/RightSideBar'
 
 
 function App() {
+	console.log("Hare Krishna ")
 
 
 	return (
-		<div className='p-10 min-w-screen min-h-screen bg-blur-md bg-gradient-to-r from-purple-200 to-blue-100 rounded-lg'>
+		<div className='p-10 min-w-screen min-h-screen rounded-lg'>
 			<Navbar></Navbar>
 			<div className='flex py-5 gap-5'>
 				<div className='w-2/12'><LeftSideBar></LeftSideBar></div>

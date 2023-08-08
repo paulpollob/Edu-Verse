@@ -21,7 +21,7 @@ const Navbar = () => {
 
             <div className='flex items-center gap-3 bg-slate-100 rounded-lg py-1 px-2'>
                 <FaSearch />
-                <input className='bg-transparent outline-0' placeholder='Search' type='text' />
+                <input className='bg-transparent border-0 ' placeholder='Search' type='text' />
             </div>
 
             <div className='flex items-center gap-5'>
