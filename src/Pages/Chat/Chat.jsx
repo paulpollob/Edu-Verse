@@ -48,28 +48,18 @@ const Chat = () => {
         }
 
         if (flg != 0) msg();
-
-        // const msg = () => {
-        //     setMsges([...msges, { 'type': 'answer', 'details': msges[msges.length - 1]?.details }])
-
-        // }
-        // msg();
-        // console.log('Updated Array:', msges);
+ 
 
 
     }, [flg]);
-    useEffect(() => {
-        const section = document.getElementById("hk");
-        section?.scrollIntoView({ behavior: 'smooth' });
-    }, [msges])
+
+    
+
     return (
         <div className='flex flex-col items-center justify-end border h-full'>
             <div id='chat' className=' flex flex-col w-full h-full overflow-auto scroll-m-6 p-6 '>
 
                 <From msges={msges} loading={loading}></From>
-                {/* <From msges = {{ 'type': 'loading', 'details': "data.response" }}></From> */}
-
-
 
             </div>
             <form onSubmit={(e) => send(e, msges, setMsges, flg, setFlg, setLoading)} className=' p-5 flex justify-between items-center gap-3 w-full'>
@@ -84,7 +74,6 @@ const Chat = () => {
 };
 
 const From = ({ msges, loading }) => {
-    // console.log("HK last msg: ", msges[msges.length-1]?.details, (msges[msges.length-1]?.details == "hk")? 'hare krishna id': 'horiboll id')
     return (
         <div className='w-full'>
             {
@@ -107,14 +96,6 @@ const From = ({ msges, loading }) => {
                                 <div className='rounded-lg text-white flex justify-start  p-5 text-justify bg-blue-500 max-w-lg'>
                                     {msg.details}
                                 </div>
-                            </div>
-                        )
-                    else
-                        return (
-                            <div>
-                                <img className='h-10 w-10 rounded-full' src='./../../assets/logo.png' alt='no img' />
-
-                                <span className="loading loading-dots loading-lg"></span>
                             </div>
                         )
                 })
