@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../../Context/EduContext';
+import { Link } from 'react-router-dom';
 
 const Classroom = () => {
 
@@ -9,7 +10,6 @@ const Classroom = () => {
 
     return (
         <div className='select-none relative flex flex-col gap-10 bg-slate-50 text-slate-600 p-10 rounded-xl'>
-            Hare Krishna from classroom
             <div className='grid grid-cols-3 gap-5'>
                 <Class></Class>
                 <Class></Class>
@@ -25,16 +25,18 @@ const Classroom = () => {
 
 const Class = () => {
     return (
-        <div className='select-none bg-slate-500 text-slate-50 rounded-xl border'>
-            <img className='rounded-xl h-40 w-full' src='https://img.freepik.com/free-vector/chalkboard-with-math-elements_1411-88.jpg?w=900&t=st=1691342843~exp=1691343443~hmac=dc93e2ddbd9d018bdc50a2fbd6a15f26b2ec1e8743982433f46f28cf1486140b'></img>
-            <div className='-translate-y-5 text-center flex flex-col items-center justify-center'>
-                <h1 className='font-bold bg-slate-400 rounded-full p-2 text-center inline -translated-y-10'>Computer Science</h1>
-                <small className=''>course code: 5555</small>
-                <small className=''>course credit: 5</small>
+        <Link to={'/tc/Home'}>
+            <div className='select-none bg-slate-500 text-slate-50 rounded-xl border'>
+                <img className='rounded-xl h-40 w-full' src='https://img.freepik.com/free-vector/chalkboard-with-math-elements_1411-88.jpg?w=900&t=st=1691342843~exp=1691343443~hmac=dc93e2ddbd9d018bdc50a2fbd6a15f26b2ec1e8743982433f46f28cf1486140b'></img>
+                <div className='-translate-y-5 text-center flex flex-col items-center justify-center'>
+                    <h1 className='font-bold bg-slate-400 rounded-full p-2 text-center inline -translated-y-10'>Computer Science</h1>
+                    <small className=''>course code: 5555</small>
+                    <small className=''>course credit: 5</small>
+                </div>
+                <hr className='border-1'></hr>
+                <div className='px-2 float-right'><small>10 people</small></div>
             </div>
-            <hr className='border-1'></hr>
-            <div className='px-2 float-right'><small>10 people</small></div>
-        </div>
+        </Link>
     );
 }
 
@@ -60,25 +62,24 @@ const Form = ({ insrtScrn, setInsrtScrn }) => {
         alert(url)
     }
 
-    const btnEvnt = (event) =>
-    {
+    const btnEvnt = (event) => {
         const form = event.target.form
         const title = form.title.value
         const code = form.code.value
-        const value = {title, code}
+        const value = { title, code }
         console.log("HK value is: ", value)
 
-        fetch('http://localhost:5000/users/',{
+        fetch('http://localhost:5000/users/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(value)
         })
-        .then(res=>res.json())
-        .then(data =>{
-            console.log("Hare Krishna from:  client ", data)
-        })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Hare Krishna from:  client ", data)
+            })
 
     }
 
@@ -111,7 +112,7 @@ const Form = ({ insrtScrn, setInsrtScrn }) => {
                             </label>
                             <label className="input-group input-group-vertical">
                                 <span className='bg-slate-300'>Course Title: </span>
-                                <input name = 'title' type="text" placeholder="Course Title" className=" bg-slate-100 input input-bordered" />
+                                <input name='title' type="text" placeholder="Course Title" className=" bg-slate-100 input input-bordered" />
                             </label>
                         </div>
 
@@ -121,7 +122,7 @@ const Form = ({ insrtScrn, setInsrtScrn }) => {
                             </label>
                             <label className="input-group input-group-vertical">
                                 <span className='bg-slate-300'>Course Code: </span>
-                                <input name = 'code' type="text" placeholder="Course Code" className=" bg-slate-100 input input-bordered" />
+                                <input name='code' type="text" placeholder="Course Code" className=" bg-slate-100 input input-bordered" />
                             </label>
                         </div>
 
@@ -155,7 +156,7 @@ const Form = ({ insrtScrn, setInsrtScrn }) => {
                             </label>
                             <label className="input-group input-group-vertical">
                                 <span className='bg-slate-300'>Banner</span>
-                                <input name = 'file' onChange={set} type="file" placeholder="photo" accept="image/png, image/gif, image/jpeg" className=" bg-slate-100 input input-bordered" />
+                                <input name='file' onChange={set} type="file" placeholder="photo" accept="image/png, image/gif, image/jpeg" className=" bg-slate-100 input input-bordered" />
                             </label>
                         </div>
 
@@ -170,7 +171,7 @@ const Form = ({ insrtScrn, setInsrtScrn }) => {
                         <div className="modal-action m-0 flex items-center justify-center">
                             <button className="btn bg-slate-50 text-slate-700 hover:bg-slate-400">Close</button>
                         </div>
-                        <button onClick={btnEvnt}  className="btn bg-slate-50 text-slate-700 hover:bg-slate-400">Submit</button>
+                        <button onClick={btnEvnt} className="btn bg-slate-50 text-slate-700 hover:bg-slate-400">Submit</button>
 
                     </div>
                 </form>

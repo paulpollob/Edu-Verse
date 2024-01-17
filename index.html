@@ -5,14 +5,20 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edu-Verse</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js" integrity="sha512-ml/QKfG3+Yes6TwOzQb7aCNtJF4PUyha6R3w8pSTo/VJSywl7ZreYvvtUso7fKevpsI+pYVVwnu82YO0q3V6eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
   </head>
   <body>
     <script>
-      	console.log("Hare Krishna ")
+      
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+      console.log("Hare Krishna ")
 
     </script>
 
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+
   </body>
 </html>

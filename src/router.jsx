@@ -7,6 +7,12 @@ import TeacherMain from "./Pages/Teacher/TeacherMain";
 import TeacherHome from "./Pages/Teacher/TeacherHome";
 import Temp from "./Pages/Temp";
 import Classroom from "./Pages/Teacher/Classroom";
+import ClassroomPage from "./Pages/Teacher/ClassroomPage";
+import Chat from "./Pages/Chat/Chat";
+import ChatMain from "./Pages/Chat/ChatMain";
+import ChatHome from "./Pages/Chat/ChatHome";
+import VideoText from "./Pages/Chat/VideoText";
+import PDFChat from "./Pages/Chat/PDFChat";
 
 export const router = createBrowserRouter([
     {
@@ -30,6 +36,10 @@ export const router = createBrowserRouter([
             {
                 path: '/tc/classroom',
                 element: <Classroom></Classroom>
+            },
+            {
+                path: '/tc/Home',
+                element: <ClassroomPage></ClassroomPage>
             }
         ]
     },
@@ -44,5 +54,27 @@ export const router = createBrowserRouter([
     {
         path: '/login',
         element: <LogIn></LogIn>
+    },
+    {
+        path: '/ask',
+        element: <ChatMain></ChatMain>,
+        children: [
+            {
+                path: '/ask',
+                element: <ChatHome></ChatHome>
+            },
+            {
+                path: '/ask/video',
+                element: <VideoText></VideoText>
+            },
+            {
+                path: '/ask/chat',
+                element: <Chat></Chat>
+            },
+            {
+                path: '/ask/pdf',
+                element: <PDFChat></PDFChat>
+            }
+        ]
     }
 ])

@@ -8,6 +8,9 @@ import { FaGamepad } from 'react-icons/fa'
 import { GiPublicSpeaker } from 'react-icons/gi'
 import { Context } from '../../Context/EduContext';
 import { Link } from 'react-router-dom';
+import { PiChatCircleBold } from "react-icons/pi";
+
+
 
 
 const LeftSideBar = () => {
@@ -40,6 +43,12 @@ const LeftSideBar = () => {
                 <Link to={'/tc/classroom/'}><div className={`${tcLeftRoute == 1 && 'bg-slate-50 '} rounded-lg py-2 px-5 hover:bg-slate-200  cursor-pointer	 flex items-center gap-6 font-bold`}>
                     <SiGoogleclassroom className='w-7 h-7' />
                     <h2>Classroom</h2>
+                </div>
+                </Link>
+
+                <Link to={'/ask'}><div className={`${tcLeftRoute == 2 && 'bg-slate-50 '} rounded-lg py-2 px-5 hover:bg-slate-200  cursor-pointer	 flex items-center gap-6 font-bold`}>
+                    <PiChatCircleBold className='w-7 h-7'/>
+                    <h2>Query</h2>
                 </div>
                 </Link>
 
