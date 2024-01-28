@@ -1,21 +1,43 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Context } from '../../Context/EduContext';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+
 
 const Classroom = () => {
 
     const { tcLeftRoute, setTcLeftRoute } = useContext(Context);
     const [insrtScrn, setInsrtScrn] = useState(false)
+    const [classes, setClasses] = useState([])
+    const [updated, setUpdated] = useState(false)
     setTcLeftRoute(1);
 
+
+    useEffect(() => {
+        fetch('http://localhost:5000/getAll',
+            {
+                method: 'POST',
+                body: JSON.stringify({ "teacherID": "65ad2879fb92e5dc165bca8a" }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+            .then(res => res.json())
+            .then(data => setClasses(data))
+    }, [updated])
+
     return (
-        <div className='select-none relative flex flex-col gap-10 bg-slate-50 text-slate-600 p-10 rounded-xl'>
-            <div className='grid grid-cols-3 gap-5'>
-                <Class></Class>
-                <Class></Class>
+        <div className='select-none relative flex flex-col    h-full bg-slate-50     text-slate-600 p-3  rounded-xl'>
+
+            <div className='grid grid-cols-3 gap-5 h-full  overflow-auto scroll-m-6'>
+
+                {
+
+                    classes.map((cls) =>
+                        <Class key={cls._id} _id={cls._id} image={cls.image} title={cls.title} code={cls.code} section={cls.section} room={cls.room}></Class>
+                    )
+                }
+
                 <Insert insrtScrn={insrtScrn} setInsrtScrn={setInsrtScrn}></Insert>
             </div>
-            <Form insrtScrn={insrtScrn} setInsrtScrn={setInsrtScrn}></Form>
+            <Form insrtScrn={insrtScrn} setInsrtScrn={setInsrtScrn} updated={updated} setUpdated={setUpdated}></Form>
         </div>
     );
 };
@@ -23,20 +45,28 @@ const Classroom = () => {
 
 
 
-const Class = () => {
+const Class = ({ _id, image, title, code, section, room }) => {
+    const navigate = useNavigate();
+    const pathName = '/tc/Home'
+    const location = useLocation();
+    const handleClick = (event) => {
+
+        navigate(pathName, {state:_id})
+        
+      };
     return (
-        <Link to={'/tc/Home'}>
-            <div className='select-none bg-slate-500 text-slate-50 rounded-xl border'>
-                <img className='rounded-xl h-40 w-full' src='https://img.freepik.com/free-vector/chalkboard-with-math-elements_1411-88.jpg?w=900&t=st=1691342843~exp=1691343443~hmac=dc93e2ddbd9d018bdc50a2fbd6a15f26b2ec1e8743982433f46f28cf1486140b'></img>
+        <div  onClick={handleClick} >
+            <div className='cursor-pointer select-none bg-slate-500 h-full text-slate-50 rounded-xl border'>
+                <img className='rounded-xl h-40 w-full' src={image}></img>
                 <div className='-translate-y-5 text-center flex flex-col items-center justify-center'>
-                    <h1 className='font-bold bg-slate-400 rounded-full p-2 text-center inline -translated-y-10'>Computer Science</h1>
-                    <small className=''>course code: 5555</small>
+                    <h1 className='font-bold bg-slate-400 rounded-full p-2 text-center inline -translated-y-10'>{title}</h1>
+                    <small className=''>course code: {code}</small>
                     <small className=''>course credit: 5</small>
                 </div>
                 <hr className='border-1'></hr>
                 <div className='px-2 float-right'><small>10 people</small></div>
             </div>
-        </Link>
+        </div>
     );
 }
 
@@ -51,35 +81,80 @@ const Insert = ({ insrtScrn, setInsrtScrn }) => {
 }
 
 
-const Form = ({ insrtScrn, setInsrtScrn }) => {
+const Form = ({ insrtScrn, setInsrtScrn, updated, setUpdated }) => {
 
-    const [img, setImg] = useState('')
+
+
+    const [img, setImg] = useState()
+    const [imgUrl, setImgUrl] = useState("")
+    const [imgBb, setImgBb] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const set = (event) => {
         const src = event.target.files[0];
         const url = URL.createObjectURL(src)
-        setImg(url)
-        alert(url)
+        setImg(src)
+        setImgUrl(url);
     }
 
-    const btnEvnt = (event) => {
-        const form = event.target.form
-        const title = form.title.value
-        const code = form.code.value
-        const value = { title, code }
-        console.log("HK value is: ", value)
+ 
 
-        fetch('http://localhost:5000/users/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(value)
-        })
+    const close = (event) => {
+        event.preventDefault();
+        window.dialog.close()
+    }
+    
+
+    const btnEvnt = (event) => {
+        event.preventDefault();
+            const form = event.target
+        setLoading(true)
+
+
+        const formData = new FormData();
+        formData.append('image', img);
+
+
+        fetch("https://api.imgbb.com/1/upload?key=e1908c42ce047aa360fb1935d07ff103",
+            {
+                method: 'POST',
+                body: formData
+            })
             .then(res => res.json())
             .then(data => {
-                console.log("Hare Krishna from:  client ", data)
+
+                
+
+
+                const image = data.data.display_url
+                const title = form.title.value
+                const code = form.code.value
+                const section = form.section.value
+                const room = form.room.value
+                const teacherID = "65ad2879fb92e5dc165bca8e"
+
+                const value = { image, title, code, section, room, teacherID }
+
+
+
+                fetch('http://localhost:5000/insert', {
+                    method: 'POST',
+                    body: JSON.stringify(value),
+                    headers: { 'Content-Type': 'application/json' },
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        {
+                            setLoading(false);
+                            window.my_modal_1.close();
+                            setUpdated(!updated) 
+                            form.reset()
+                        }
+                    })
+                    .catch((error) => console.log("Error:", error));
             })
+
+
 
     }
 
@@ -99,82 +174,87 @@ const Form = ({ insrtScrn, setInsrtScrn }) => {
 
 
 
-        <div>
+        <div className=''>
             {/* Open the modal using ID.showModal() method */}
-            <dialog id="my_modal_1" className="modal bg-slate-50 bg-opacity-40">
-                <form method="dialog" className="modal-box bg-slate-50">
-                    <h3 className="font-bold text-lg">Hello!</h3>
-                    <div className="py-4 grid grid-cols-2 gap-5">
+            <dialog id="my_modal_1" className=" modal bg-slate-50 bg-opacity-40">
+                <div className='relative'>
+                    <form onSubmit={btnEvnt} method="dialog" className="modal-box w-full bg-slate-50">
+                        <h3 className="font-bold text-lg">Hello!</h3>
+                        <div className="py-4 grid grid-cols-2 gap-5">
 
-                        <div className="form-control">
-                            <label className="label">
-                                {/* <span className="label-text">Your Email</span> */}
-                            </label>
-                            <label className="input-group input-group-vertical">
-                                <span className='bg-slate-300'>Course Title: </span>
-                                <input name='title' type="text" placeholder="Course Title" className=" bg-slate-100 input input-bordered" />
-                            </label>
+                            <div className="form-control">
+                                     <label className="label">
+                                    {/* <span className="label-text">Your Email</span> */}
+                                </label>
+                                <label className="input-group input-group-vertical">
+                                    <span className=''>Course Title: </span>
+                                    <input name='title' type="text" placeholder="Course Title" className=" bg-slate-100 input input-bordered" required/>
+                                </label>
+                            </div>
+
+                            <div className="form-control">
+                                <label className="label">
+                                    {/* <span className="label-text">Your Email</span> */}
+                                </label>
+                                <label className="input-group input-group-vertical">
+                                    <span className=''>Course Code: </span>
+                                    <input name='code' type="text" placeholder="Course Code" className=" bg-slate-100 input input-bordered" required/>
+                                </label>
+                            </div>
+
+
+                            <div className="form-control">
+                                <label className="label">
+                                    {/* <span className="label-text">Your Email</span> */}
+                                </label>
+                                <label className="input-group input-group-vertical">
+                                    <span className=''>Section</span>
+                                    <input name='section' type="text" placeholder="Section" className=" bg-slate-100 input input-bordered" required/>
+                                </label>
+                            </div>
+
+
+
+                            <div className="form-control">
+                                <label className="label">
+                                    {/* <span className="label-text">Your Email</span> */}
+                                </label>
+                                <label className="input-group input-group-vertical">
+                                    <span className=''>Room</span>
+                                    <input name='room' type="text" placeholder="Room No." className=" bg-slate-100 input input-bordered" required/>
+                                </label>
+                            </div>
+
+
+                            <div className="form-control">
+                                <label className="label"> 
+                                </label>
+                                <label className="input-group input-group-vertical">
+                                    <span className=''>Banner</span>
+                                    <input name='image' onChange={set} type="file" placeholder="photo" accept="image/png, image/gif, image/jpeg" className=" w-full bg-slate-100 input input-bordered" required/>
+                                </label>
+                            </div>
+
+
+
+                            <div className="form-control">
+                                <img className='w-full h-full' src={`${imgUrl || 'https://as2.ftcdn.net/v2/jpg/04/75/81/33/1000_F_475813394_0WixuXzrBayNkMfPTeJ3YkJPTN8uzRqg.jpg'}`}></img>
+
+                            </div>
                         </div>
+                        <div className='flex items-center justify-between'>
+                            <div className="modal-action m-0 flex items-center justify-center">
+                                <button onClick={close} className="btn bg-slate-50 text-slate-700 hover:bg-slate-400">Close</button>
+                            </div>
+                            <button type='submit' className="btn bg-slate-50 text-slate-700 hover:bg-slate-400">Submit</button>
+                        </div> 
+                    </form>
+                {loading && <div className='absolute flex items-center justify-center w-full h-full opacity-25 rounded-xl bg-slate-900 top-0'>
+                    <span className="loading loading-bars loading-lg text-slate-50"></span>
+                </div>}
+                    
+                </div>
 
-                        <div className="form-control">
-                            <label className="label">
-                                {/* <span className="label-text">Your Email</span> */}
-                            </label>
-                            <label className="input-group input-group-vertical">
-                                <span className='bg-slate-300'>Course Code: </span>
-                                <input name='code' type="text" placeholder="Course Code" className=" bg-slate-100 input input-bordered" />
-                            </label>
-                        </div>
-
-
-                        <div className="form-control">
-                            <label className="label">
-                                {/* <span className="label-text">Your Email</span> */}
-                            </label>
-                            <label className="input-group input-group-vertical">
-                                <span className='bg-slate-300'>Email</span>
-                                <input type="text" placeholder="info@site.com" className=" bg-slate-100 input input-bordered" />
-                            </label>
-                        </div>
-
-
-
-                        <div className="form-control">
-                            <label className="label">
-                                {/* <span className="label-text">Your Email</span> */}
-                            </label>
-                            <label className="input-group input-group-vertical">
-                                <span className='bg-slate-300'>Email</span>
-                                <input type="text" placeholder="info@site.com" className=" bg-slate-100 input input-bordered" />
-                            </label>
-                        </div>
-
-
-                        <div className="form-control">
-                            <label className="label">
-                                {/* <span className="label-text">Your Email</span> */}
-                            </label>
-                            <label className="input-group input-group-vertical">
-                                <span className='bg-slate-300'>Banner</span>
-                                <input name='file' onChange={set} type="file" placeholder="photo" accept="image/png, image/gif, image/jpeg" className=" bg-slate-100 input input-bordered" />
-                            </label>
-                        </div>
-
-
-
-                        <div className="form-control">
-                            <img className='w-full h-full' src={`${img || 'https://as2.ftcdn.net/v2/jpg/04/75/81/33/1000_F_475813394_0WixuXzrBayNkMfPTeJ3YkJPTN8uzRqg.jpg'}`}></img>
-
-                        </div>
-                    </div>
-                    <div className='flex items-center justify-between'>
-                        <div className="modal-action m-0 flex items-center justify-center">
-                            <button className="btn bg-slate-50 text-slate-700 hover:bg-slate-400">Close</button>
-                        </div>
-                        <button onClick={btnEvnt} className="btn bg-slate-50 text-slate-700 hover:bg-slate-400">Submit</button>
-
-                    </div>
-                </form>
             </dialog>
         </div>
     )

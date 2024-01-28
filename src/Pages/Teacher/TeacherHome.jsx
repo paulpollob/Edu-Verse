@@ -10,7 +10,7 @@ const TeacherHome = () => {
 
   return (
     <div className="flex flex-col gap-5 bg-slate-50 text-slate-600 p-10 rounded-xl">
-      Hare Krishna
+      HK from home
     </div>
   );
 };

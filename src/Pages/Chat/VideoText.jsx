@@ -53,7 +53,7 @@ const LoadVideo = ({ connected, setConnected, loading, setLoading, msges, setMsg
                     body: JSON.stringify({ "url": url })
                 })
                 .then(res => res.json())
-                .then((data) => { setConnected(data.success);setLoading(false); setMsges([]); console.log("HK success: ", data.success) })
+                .then((data) => { setConnected(data.success);setLoading(false); setMsges([]); })
                 .catch((error) => console.log("Error:", error));
         }
         if (flg != 0) load()
@@ -115,7 +115,7 @@ const Chat = ({msges, setMsges}) => {
                 body: JSON.stringify({ 'user': msges[msges.length - 1]?.details })
             })
                 .then(res => res.json())
-                .then((data) => { console.log("HK response: ", data);setMsges([...msges, { 'type': 'answer', 'details': data.output_text }]); setLoading(false) })
+                .then((data) => {setMsges([...msges, { 'type': 'answer', 'details': data.output_text }]); setLoading(false) })
                 .catch((error) => console.log("Error:", error));
 
 
@@ -147,7 +147,6 @@ const Chat = ({msges, setMsges}) => {
 };
 
 const CreateMsg = ({ msges, loading }) => {
-    // console.log("HK msg is: :", msges)
     return (
         <div className='flex flex-col gap-4 h-full'>
             {

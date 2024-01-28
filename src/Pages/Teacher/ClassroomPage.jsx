@@ -1,43 +1,56 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { FaRegNewspaper } from "react-icons/fa";
 import { GrTask } from "react-icons/gr";
 import { FaNewspaper } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
+import Annoucement from './Annoucement';
+import Task from './Task';
+import People from './People';
 
 
 
 
 
-const ClassroomPage = () => {
+const ClassroomPage = (props) => {
+    const [page, setPage] = useState(1);
+    const location = useLocation();
+    // const location = props 
+ 
+    console.log("HK location from: ", location)
     return (
         <div>
-            <Head></Head>
+            <Head setPage={setPage}></Head>
+            {"class id: "+location.state}  
+            {(page==1) && <Annoucement></Annoucement>}
+            {(page==2) && <Task classID={location.state}></Task>}
+            {(page==3) && <People></People>}
         </div>
     );
 };
 
-const Head = () => {
+const Head = ({ setPage }) => {
+
     return (
         <div className='flex justify-center items-center h-full w-full border rounded py-5 gap-3 divide-x'>
-            <Link>
+            <div className='cursor-pointer' onClick={ ()=>setPage(1) } >
                 <div className='flex gap-3 items-center  '>
                     <FaRegNewspaper />
                     <h1>Annoucement</h1>
                 </div>
-            </Link> 
-            <Link>
+            </div> 
+            <div className='cursor-pointer' onClick={ ()=>setPage(2) } >
                 <div className='flex gap-3 items-center  ms-3'>
                     <FaTasks />
                     <h1>Task</h1>
                 </div>
-            </Link>
-            <Link>
+            </div>
+            <div className='cursor-pointer' onClick={ ()=>setPage(3) } >
                 <div className='flex gap-3 items-center ms-3'>
                     <FaTasks />
                     <h1>Task</h1>
                 </div>
-            </Link>
+            </div>
 
  
             

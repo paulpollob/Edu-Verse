@@ -13,6 +13,10 @@ import ChatMain from "./Pages/Chat/ChatMain";
 import ChatHome from "./Pages/Chat/ChatHome";
 import VideoText from "./Pages/Chat/VideoText";
 import PDFChat from "./Pages/Chat/PDFChat";
+import PrivateRoute from "./Pages/PrivateRoute/PrivateRoute";
+import Annoucement from "./Pages/Teacher/Annoucement";
+import Task from "./Pages/Teacher/Task";
+import People from "./Pages/Teacher/People";
 
 export const router = createBrowserRouter([
     {
@@ -39,7 +43,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/tc/Home',
-                element: <ClassroomPage></ClassroomPage>
+                element: <PrivateRoute><ClassroomPage></ClassroomPage></PrivateRoute>  
             }
         ]
     },

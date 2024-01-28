@@ -6,12 +6,18 @@ const PDFChat = () => {
     const { tcLeftRoute, setTcLeftRoute } = useContext(Context);
     setTcLeftRoute(2);
 
-
+    const [txt, setText] = useState("");
+    const [flg, setFlg] = useState(0);
+    const [msges, setMsges] = useState([])
     const [upload, setUpload] = useState(true);
+    const [uplding, setUplding] = useState(false);
+    const [connected, setConnected] = useState(false);
+
     const pdfUpload = (event) => {
         event.preventDefault();
         setUpload(!upload);
-        // console.log("HK: ", event.target.input)
+        setUplding(true);
+        setMsges([])
         const input = event.target.input
         let file = input.files[0];
         if (file != undefined && file.type == "application/pdf") {
@@ -29,6 +35,7 @@ const PDFChat = () => {
     const editPdf = (event) => {
         event.preventDefault();
         setUpload(!upload);
+        setConnected(false);
     }
 
     let alltext = [];
@@ -43,10 +50,7 @@ const PDFChat = () => {
                 let text = txt.items.map((s) => s.str).join(""); // Concatenate the text items into a single string
                 alltext.push(text); // Add the extracted text to the array
             }
-            // alltext.map((e, i) => {
-            //     alert("HKK")
-            //     select.innerHTML += `<option value="${i+1}">${i+1}</option>`; // Add options for each page in the page selection dropdown
-            // });
+
             afterProcess(event);
         }
         catch (err) {
@@ -57,33 +61,54 @@ const PDFChat = () => {
     function afterProcess(event) {
         const answer = event.target.parentNode.children[1]
 
+        let txt = "";
+
         alltext.map((e, i) => {
-            answer.innerHTML += alltext[i] + ` `; // Add options for each page in the page selection dropdown
+            txt += alltext[i] + ` `; // Add options for each page in the page selection dropdown
         });
-        // console.log("HK: ", event.target.parentNode.children[1])
-        // const pdftext = even
-        // pdftext.value = alltext[select.value - 1]; // Display the extracted text for the selected page
-        // download.href = "data:text/plain;charset=utf-8," + encodeURIComponent(alltext[select.value - 1]); // Set the download link URL for the extracted text
-        // afterupload.style.display = "flex"; // Display the result section
-        // document.querySelector(".another").style.display = "unset"; // Display the "Extract Another PDF" button
+        setText(txt);
+        setFlg(flg + 1);
+
     }
 
+    useEffect(() => {
+        const load = () => {
+            fetch('http://192.168.1.6:8000/pdfTextLoaded', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ "usertext": txt })
+            })
+                .then(res => res.json())
+                .then((data) => { setConnected(data.success); setUplding(false) })
+                .catch((error) => console.log("Error:", error));
+        }
+        if (flg != 0) load();
+
+    }, [flg])
+
     return (
-        <div className='h-full'>
-            <form className='w-full flex ' onSubmit={upload ? pdfUpload : editPdf}>
-                <input name='input' type='file' accept="application/pdf, application/vnd.ms-excel" placeholder='upload pdf' className='border-none rounded-s-lg bg-blue-50 text-slate-900' disabled={upload ? false : true} />
-                <button type='submit' className='border rounded-none rounded-e-lg bg-blue-50 text-slate-900 px-5 '>{upload ? "Upload PDF" : "Upload Another"}</button>
-            </form>
-            {/* <form className='flex' onSubmit={pdfUpload}>
-                <input name='input' type='file' accept="application/pdf, application/vnd.ms-excel" placeholder='upload pdf' className='rounded-s-lg bg-blue-400 text-slate-50' disabled/>
-                <button type='submit' className='border rounded-none rounded-e-lg bg-blue-400 text-slate-50 px-5'>Upload</button>
-            </form> */}
+        <div className='relative h-full'>
+            <div className=''>
+                <form className='w-full flex ' onSubmit={upload ? pdfUpload : editPdf}>
+                    <input name='input' type='file' accept="application/pdf, application/vnd.ms-excel" placeholder='upload pdf' className='border-none rounded-s-lg bg-blue-50 text-slate-900' disabled={upload ? false : true} />
+                    <button type='submit' className='border rounded-none rounded-e-lg bg-blue-50 text-slate-900 px-5 '>{upload ? "Upload PDF" : "Upload Another"}</button>
+                </form>
 
-            <div className='w-full border my-3'></div>
 
-            <div className='h-full'>
-                <Chat></Chat>
+                <div className='w-full border my-3'></div>
+
+                <div className='relative'>
+                    <div className=''><Chat msges={msges} setMsges={setMsges}></Chat></div>
+                    {!connected && <div className='absolute top-0 rounded-lg w-full h-full bg-slate-50 opacity-80'></div>}
+                </div>
             </div>
+            {
+                uplding &&
+                <div className='absolute w-full h-full bg-slate-50 opacity-70 top-0 flex justify-center items-center'>
+                    <span className="loading loading-bars loading-lg"></span>
+                </div>
+            }
+
         </div>
     );
 };
@@ -91,36 +116,37 @@ const PDFChat = () => {
 
 
 
-const Chat = () => {
+const Chat = ({msges, setMsges}) => {
 
 
 
     const [flg, setFlg] = useState(0);
-    const [msges, setMsges] = useState([])
+    const [loading, setLoading] = useState(false)
     const send = (event) => {
         event.preventDefault();
+        setLoading(true)
         const msg = event.target.msg;
-        setMsges([...msges, { "type": "answer", "details": msg.value }])
+        setMsges([...msges, { "type": "question", "details": msg.value }])
         msg.value = ""
+        setFlg(flg+1);
     }
     useEffect(() => {
 
-        // const msg = () => {
-
-        //     fetch('http://192.168.1.6:8000/chatGemini', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ 'user': msges[msges.length - 1]?.details })
-        //     })
-        //         .then(res => res.json())
-        //         .then((data) => { setMsges([...msges, { 'type': 'answer', 'details': data.response }]); setLoading(false) })
-        //         .catch((error) => console.log("Error:", error));
-
+        const msg = () => {
+            fetch('http://192.168.1.6:8000/chatPDFgemini', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 'user': msges[msges.length - 1]?.details })
+            })
+                .then(res => res.json())
+                .then((data) => { setMsges([...msges, { 'type': 'answer', 'details': data.output_text }]); setLoading(false) })
+                .catch((error) => console.log("Error:", error));
 
 
-        // }
 
-        // if (flg != 0) msg();
+        }
+
+        if (flg != 0) msg();
 
 
 
@@ -132,7 +158,7 @@ const Chat = () => {
         <div className='flex flex-col items-center justify-end border h-96 rounded-lg'>
             <div id='chat' className=' flex flex-col w-full h-full overflow-auto scroll-m-6 p-6 '>
 
-                <CreateMsg msges={msges}></CreateMsg>
+                <CreateMsg msges={msges} loading={loading}></CreateMsg>
 
             </div>
             <form onSubmit={send} className=' p-5 flex justify-between items-center gap-3 w-full'>
@@ -144,8 +170,7 @@ const Chat = () => {
     );
 };
 
-const CreateMsg = ({ msges }) => {
-    console.log("HK msg is: :", msges)
+const CreateMsg = ({ msges, loading }) => {
     return (
         <div className='flex flex-col gap-4 h-full'>
             {
@@ -178,6 +203,13 @@ const CreateMsg = ({ msges }) => {
                             </div>
                         )
                 })
+            }
+            {
+               loading && <div className='w-full flex justify-start py-5 gap-3'>
+                    <img className='h-10 w-10 rounded-full' src='./../../assets/logo.png' alt='no img' />
+
+                    <span className="loading loading-dots loading-md"></span>
+                </div>
             }
         </div>
     )
