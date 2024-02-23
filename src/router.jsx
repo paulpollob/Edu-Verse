@@ -13,10 +13,12 @@ import ChatMain from "./Pages/Chat/ChatMain";
 import ChatHome from "./Pages/Chat/ChatHome";
 import VideoText from "./Pages/Chat/VideoText";
 import PDFChat from "./Pages/Chat/PDFChat";
-import PrivateRoute from "./Pages/PrivateRoute/PrivateRoute";
-import Annoucement from "./Pages/Teacher/Annoucement";
-import Task from "./Pages/Teacher/Task";
-import People from "./Pages/Teacher/People";
+import PrivateRoute from "./Pages/PrivateRoute/PrivateRoute"; 
+import StMain from "./Pages/Student/StMain";
+import StHome from "./Pages/Student/StHome";
+import StClassroom from "./Pages/Student/StClassroom";
+import StClassroomPage from "./Pages/Student/StClassroomPage";
+
 
 export const router = createBrowserRouter([
     {
@@ -31,19 +33,37 @@ export const router = createBrowserRouter([
     },
     {
         path: '/tc',
-        element: <TeacherMain></TeacherMain>,
+        element: <PrivateRoute><TeacherMain></TeacherMain></PrivateRoute>,
         children: [
             {
                 path: '/tc',
-                element: <TeacherHome></TeacherHome>
+                element: <PrivateRoute><TeacherHome></TeacherHome></PrivateRoute>
             },
             {
                 path: '/tc/classroom',
-                element: <Classroom></Classroom>
+                element: <PrivateRoute><Classroom></Classroom></PrivateRoute>
             },
             {
-                path: '/tc/Home',
+                path: '/tc/classroom/Home',
                 element: <PrivateRoute><ClassroomPage></ClassroomPage></PrivateRoute>  
+            }
+        ]
+    },
+    {
+        path: '/st',
+        element : <StMain></StMain>,
+        children: [
+            {
+                path: '/st',
+                element: <PrivateRoute><StHome></StHome></PrivateRoute>
+            },
+            {
+                path: '/st/classroom',
+                element: <PrivateRoute><StClassroom></StClassroom></PrivateRoute>
+            },
+            {
+                path: '/st/classroom/Home',
+                element: <PrivateRoute><StClassroomPage></StClassroomPage></PrivateRoute>
             }
         ]
     },

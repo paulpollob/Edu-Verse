@@ -4,7 +4,7 @@ import { Context } from '../../Context/EduContext';
 import { data } from 'autoprefixer';
 
 
-const Annoucement = ({ classID }) => {
+const StAnnoucement = ({ classID }) => {
 
     const { teacherID } = useContext(Context)
 
@@ -58,7 +58,7 @@ const MakePost = ({ teacherID, classID, updated, setUpdated }) => {
         const msg = form.annoucementText.value
         const value = { msg, teacherID, classID, time }
 
-        console.log("HK data: ", value)
+        // console.log("HK data: ", value)
 
         fetch('http://localhost:5000/makePost', {
             method: 'POST',
@@ -67,16 +67,16 @@ const MakePost = ({ teacherID, classID, updated, setUpdated }) => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log("data: ", data)
+                // console.log("data: ", data)
                 form.reset()
                 setUpdated(!updated)
             })
             .catch((error) => console.log("Error:", error));
     }
     return (
-        <div className='border p-5 shadow-md'>
+        <div className='border p-5'>
             <form className=' flex flex-col items-end gap-5'>
-                <textarea name='annoucementText' className="shadow w-full textarea textarea-ghost focus:bg-slate-50" placeholder="Annoucement..."></textarea>
+                <textarea name='annoucementText' className="w-full textarea textarea-ghost focus:bg-slate-50" placeholder="Annoucement..."></textarea>
                 <button onClick={btnEvent} className='float btn btn-primary text-slate-50'>Post</button>
             </form>
         </div>
@@ -84,8 +84,9 @@ const MakePost = ({ teacherID, classID, updated, setUpdated }) => {
 }
 
 const Post = ({ _id, msg, time, userID, comment, updated, setUpdated }) => {
+    const {user} = useContext(Context);
     const { day, month, year } = time;
-    console.log("HK my cmnt is: ", comment)
+    // console.log("HK my cmnt is: ", comment)
 
 
     const cmnt = (event) => {
@@ -96,7 +97,7 @@ const Post = ({ _id, msg, time, userID, comment, updated, setUpdated }) => {
 
         const value = { _id, cmnt, userID, occupation, time }
 
-        console.log("HK my value is: ", value)
+        // console.log("HK my value is: ", value)
 
 
         fetch('http://localhost:5000/makeComment', {
@@ -106,18 +107,18 @@ const Post = ({ _id, msg, time, userID, comment, updated, setUpdated }) => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log("cmnt ", data, " ", _id, ", ", userID)
+                // console.log("cmnt ", data, " ", _id, ", ", userID)
                 event.target.reset()    
                 setUpdated(!updated)
             })
             .catch((error) => console.log("Error:", error));
     }
     return (
-        <div className='border rounded-lg flex flex-col bg-slate-50 shadow'>
+        <div className='border rounded-lg flex flex-col bg-slate-50'>
             <div className=' m-3 p-2 flex gap-3 border-b'>
                 <img className='circle rounded-full h-12 w-12' src='https://i.imgur.com/asLPUCK.jpg' />
                 <div className='flex flex-col justify-center'>
-                    <h1>Prokash Paul Pollob</h1>
+                    <h1>{"d"}</h1>
                     <small>{day}/{month}/{year}</small>
                 </div>
             </div>
@@ -127,7 +128,7 @@ const Post = ({ _id, msg, time, userID, comment, updated, setUpdated }) => {
             </div>
 
             <form onSubmit={cmnt} className='border-t flex items-center gap-5 w-full px-5 py-2'>
-                <img className='circle rounded-full h-8 w-8' src='https://i.imgur.com/asLPUCK.jpg' />
+                <img className='circle rounded-full h-8 w-8' src={user.img} />
                 <input name='comment' type="text" placeholder="Comments..." className=" focus:bg-slate-50 input input-ghost w-full " />
                 <button type='submit' className='btn btn-outline '><IoSend className='text-3xl cursor-pointer' /></button>
             </form>
@@ -161,4 +162,4 @@ const Comment = ({ comnt }) => {
     )
 }
 
-export default Annoucement;
+export default StAnnoucement;

@@ -1,13 +1,13 @@
 
 
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AiTwotoneHome, AiFillSchedule, AiTwotoneStar, AiTwotoneVideoCamera } from 'react-icons/ai'
 import { SiGoogleclassroom } from 'react-icons/si'
 import { CgLoadbarDoc } from 'react-icons/cg'
-import { FaGamepad } from 'react-icons/fa'
+import { FaGamepad, FaSignOutAlt } from 'react-icons/fa'
 import { GiPublicSpeaker } from 'react-icons/gi'
 import { Context } from '../../Context/EduContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PiChatCircleBold } from "react-icons/pi";
 
 
@@ -15,8 +15,22 @@ import { PiChatCircleBold } from "react-icons/pi";
 
 const LeftSideBar = () => {
 
-    const { tcLeftRoute, setTcLeftRoute } = useContext(Context)
+    const [loading, setLoading] = useState(false);
 
+    const { tcLeftRoute, setTcLeftRoute, logOut } = useContext(Context)
+    const navigate = useNavigate();
+    const signOute = () =>
+    {
+        setLoading(true)
+        logOut()
+        .then(() => {
+            setLoading(false)
+            // alert("HK signout")
+            navigate('/login')
+          }).catch((error) => {
+            alert("cann't sign out")
+          });
+    }
 
     return (
         <div>
@@ -51,7 +65,11 @@ const LeftSideBar = () => {
                     <h2>Query</h2>
                 </div>
                 </Link>
-
+                <button onClick={signOute}><div className={`${tcLeftRoute == 2 && 'bg-slate-50 '} rounded-lg py-2 px-5 hover:bg-slate-200  cursor-pointer	 flex items-center gap-6 font-bold`}>
+                    <FaSignOutAlt className='w-7 h-7'/>
+                    <h2>{loading? <span className="loading loading-ring loading-lg"></span>: "Sign Out"}</h2>
+                </div>
+                </button>
 
             </div>
         </div>
