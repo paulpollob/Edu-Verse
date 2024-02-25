@@ -10,62 +10,36 @@ const Register = () => {
     const [imageUrl, setImageUrl] = useState("");
     const [image, setImage] = useState();
     return (
-        <>
-            <Header page={page}></Header>
-            <div className='text-slate-500 flex gap-5 py-10 px-44 min-w-screen min-h-screen bg-blur-md bg-gradient-to-r from-purple-200 to-blue-100 rounded-lg'>
-                <Sidebar page={page} setPage={setPage}></Sidebar>
-                <Disp page={page} setPage={setPage} imageUrl={imageUrl} setImageUrl={setImageUrl} image={image} setImage={setImage} rError={rError} setRError={setRError}></Disp>
+        <div className='bg-white min-w-screen min-h-screen'>
+            <Header></Header>
+            <div className='flex gap-10 py-10 px-44'>
+                <Sidebar></Sidebar>
+                {/* <Disp page={page} setPage={setPage} imageUrl={imageUrl} setImageUrl={setImageUrl} image={image} setImage={setImage} rError={rError} setRError={setRError}></Disp> */}
+                <Formdisp></Formdisp>
+
             </div>
-        </>
+        </div>
     );
 };
 
-
-
-
-
-
 const Header = ({ page }) => {
     return (
-        <div className='bg-slate-100 px-20 py-5 text-gray-600'>
-            <div className='flex items-center justify-between'>
-                <h1 className='text-2xl font-bold'>Eduverse</h1>
-                <small>Need help</small>
-            </div>
-            <hr className='my-5 border border-slate-400'></hr>
-
-            <div className='bg-slate-700 h-2 rounded-lg my-6s mx-20'>
-                <div className='h-full bg-green-500 rounded-lg' Style={`width: ${(((page + 1) / 5) * 100)}%;`}></div>
-            </div>
+        <div className='bg-teal-100 p-5'>
+            <img className=" my-[-30px]" src="https://i.ibb.co/fMd12gB/logo.png" alt="logo" />
+            <hr className='my-3 border border-slate-400'></hr>
         </div>
     )
 }
-
-
 
 const Sidebar = ({ page, setPage }) => {
     return (
-        <div className='w-4/12'>
-            <h1 className='text-3xl font-bold'>Registration Form</h1>
-            <small>"Online classrooms bring together minds from around the world, creating a global learning community." - Anonymous</small>
-            <hr className='border-slate-400 border-1 m-5'></hr>
-            <div className='flex my-5'>
-                <div className='bg-slate-600 h-100 rounded-lg'>
-                    <div className='rounded-lg bg-red-500 w-1' Style={`height:${4}%`}></div>
-                </div>
-                <div className=' flex flex-col gap-10 items-start h-100 mx-5'>
-                    <div onClick={() => setPage(0)} className={`cursor-pointer hover:border-l-4 ${page == 0 && (' border-slate-600 border-r-4 border-l-4 ')} hover:border-slate-600 rounded-xl hover:border-r-4 px-2`}>User Profile</div>
-                    <div onClick={() => setPage(1)} className={`cursor-pointer hover:border-l-4 ${page == 1 && (' border-slate-600 border-r-4 border-l-4 ')} hover:border-slate-600 rounded-xl hover:border-r-4 px-2`}>Address</div>
-                    <div onClick={() => setPage(2)} className={`cursor-pointer hover:border-l-4 ${page == 2 && (' border-slate-600 border-r-4 border-l-4 ')} hover:border-slate-600 rounded-xl hover:border-r-4 px-2`}>Job Description</div>
-                    <div onClick={() => setPage(3)} className={`cursor-pointer hover:border-l-4 ${page == 3 && (' border-slate-600 border-r-4 border-l-4 ')} hover:border-slate-600 rounded-xl hover:border-r-4 px-2`}>Bank Informations & Others</div>
-                    <div onClick={() => setPage(4)} className={`cursor-pointer hover:border-l-4 ${page == 4 && (' border-slate-600 border-r-4 border-l-4 ')} hover:border-slate-600 rounded-xl hover:border-r-4 px-2`}>Upload documents</div>
-                </div>
-            </div>
-            <small>Already a user? <Link to={"/login"}>Click here to login!!!</Link></small>
+        <div className='p-5 lg:p-0 lg:w-6/12'>
+            <small className='font-bold'>"Online classrooms bring together minds from around the world, creating a global learning community." - Anonymous</small>
+            <img className="" src="https://i.ibb.co/vmPBwdK/login-side.png" alt="log side" />
+
         </div>
     )
 }
-
 
 const Disp = ({ page, setPage, imageUrl, setImageUrl, image, setImage, rError, setRError }) => {
 
@@ -88,111 +62,64 @@ const Disp = ({ page, setPage, imageUrl, setImageUrl, image, setImage, rError, s
 
 
         if (password === cfpassword)
-        console.log("HK page")
+            console.log("HK page")
 
-            uploadImg(image)
-                .then(res => res.json())
-                .then(data => {
-                    console.log("HK data: ", data)
-                    const img = data.data.display_url
-                    signUp(email, password)
-                        .then(async(userCredential) => {
-                            // Signed up 
-                            const user = userCredential.user;
-                            await updateProfile(user, {
-                                displayName: occupation
-                              }).then(() => {
-                                console.log('Username set successfully:', user.displayName);
-                                setRError(""); 
-                              }).catch((error) => {
-                                console.error('Error setting username:', error);
-                                setRError(error)
-                              });
-                            const { uid } = user
-                            console.log("HK user: ", user, uid)
-
-                            fetch('http://localhost:5000/addUser',
-                                {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(
-                                        {
-                                            "_id": uid,
-                                            "name": name,
-                                            "email": email,
-                                            "password": password,
-                                            "phone": phone,
-                                            "occupation": occupation,
-                                            "img": img
-                                        }
-                                    )
-                                })
-                                .then(res => res.json())
-                                .then((data) => { console.log("HK dta: ", data); setLoading(false); setRError(""); alert("Registered successfully!!!  You can Login Now.") })
-                                .catch((error) => {console.log("Error:", error); setLoading(false);  setRError(error); alert(error);});
-
-
-                        })
-                        .catch((error) => {
-                            const errorCode = error.code;
-                            const errorMessage = error.message;
-                            console.log(errorMessage)
-                            setLoading(false)
-                            setRError(error.message)
-                            alert(errorMessage)
+        uploadImg(image)
+            .then(res => res.json())
+            .then(data => {
+                console.log("HK data: ", data)
+                const img = data.data.display_url
+                signUp(email, password)
+                    .then(async (userCredential) => {
+                        const user = userCredential.user;
+                        await updateProfile(user, {
+                            displayName: occupation
+                        }).then(() => {
+                            console.log('Username set successfully:', user.displayName);
+                            setRError("");
+                        }).catch((error) => {
+                            console.error('Error setting username:', error);
+                            setRError(error)
                         });
-                })
+                        const { uid } = user
+                        console.log("HK user: ", user, uid)
+
+                        fetch('http://localhost:5000/addUser',
+                            {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(
+                                    {
+                                        "_id": uid,
+                                        "name": name,
+                                        "email": email,
+                                        "password": password,
+                                        "phone": phone,
+                                        "occupation": occupation,
+                                        "img": img
+                                    }
+                                )
+                            })
+                            .then(res => res.json())
+                            .then((data) => { console.log("HK dta: ", data); setLoading(false); setRError(""); alert("Registered successfully!!!  You can Login Now.") })
+                            .catch((error) => { console.log("Error:", error); setLoading(false); setRError(error); alert(error); });
 
 
-
-        // fetch('http://localhost:5000/api/signup',
-        //     {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify(
-        //             {
-        //                 "name": name,
-        //                 "email": email,
-        //                 "password": password,
-        //                 "phone": phone,
-        //                 "occupation": occupation,
-        //                 "cfpassword": cfpassword
-        //             }
-        //         )
-        //     })
-        //     .then(res => res.json())
-        //     .then((data) =>  {console.log("HK dta: ", data);setLoading(false)})
-        //     .catch((error) => console.log("Error:", error));
-
-        // Perform any other actions you need with the form data
+                    })
+                    .catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        console.log(errorMessage)
+                        setLoading(false)
+                        setRError(error.message)
+                        alert(errorMessage)
+                    });
+            })
     };
-
-    // cosnt submit = () =>
-    // {
-
-    // }
-
-    // useEffect(()=>
-    // {
-    //     fetch('http://localhost:5000/api/signup', {
-    //             method: 'POST',
-    //             headers: { 'Content-Type': 'application/json' },
-    //             body: JSON.stringify({ "usertext": txt })
-    //         })
-    //             .then(res => res.json())
-    //             .then((data) => { setConnected(data.success); setUplding(false) })
-    //             .catch((error) => console.log("Error:", error));
-    // }, [])
 
     return (
         <div className='w-8/12 mx-10 bg-slate-100 p-10 rounded-xl'>
             <UserProfile page={page} setPage={setPage} formRef={formRef} imageUrl={imageUrl} setImageUrl={setImageUrl} image={image} setImage={setImage} rError={rError}></UserProfile>
-            {/* <Address page={page} setPage={setPage}></Address>
-            <JobDescription page={page} setPage={setPage}></JobDescription>
-            <BankInformations page={page} setPage={setPage}></BankInformations>
-            <UploadDocuments page={page} setPage={setPage}></UploadDocuments> */}
-
- 
             <div className='flex items-end justify-between ' >
                 {page > 0 ? <button onClick={() => setPage(page - 1)} className={`${page < 1 && 'cursor-not-allowed '} hover:bg-green-500 bg-green-400 px-5 py-2 text-white rounded-full my-5`} >Prev</button>
                     :
@@ -208,12 +135,7 @@ const Disp = ({ page, setPage, imageUrl, setImageUrl, image, setImage, rError, s
 }
 
 
-
-
-
-
 const UserProfile = ({ page, setPage, formRef, imageUrl, setImageUrl, image, setImage, rError }) => {
-
 
     const evnt = (event) => {
         const src = event.target.files[0];
@@ -242,28 +164,7 @@ const UserProfile = ({ page, setPage, formRef, imageUrl, setImageUrl, image, set
                 </div>
 
                 <div className='flex flex-col'>
-                    {/* <input type='text' name="name" placeholder='Education Label' className="rounded-lg bg-transparent w-full"></i requirednput> */}
-
-                    {/* <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover" className="rounded-lg bg-transparent w-full btn btn-outline " type="button">Dropdown hover 
-                    <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-                    </svg>
-                    </button> */}
-
-                    {/* <!-- Dropdown menu --> */}
-                    {/* <div id="dropdownHover" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                        <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
-                            <li>
-                                <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Teacher</a>
-                            </li>
-                            <li>
-                                <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Student</a>
-                            </li>
-                        </ul>
-                    </div> */}
-
-
-                    <label  >Occupation</label>
+                    <label>Occupation</label>
                     <select name="occupation"
                         className=" rounded-lg bg-transparent w-full"
                     >
@@ -271,9 +172,8 @@ const UserProfile = ({ page, setPage, formRef, imageUrl, setImageUrl, image, set
                         <option value="Teacher">Teacher</option>
                         <option value="Student">Student</option>
                     </select>
-
-
                 </div>
+
                 <div>
                     <p>Password</p>
                     <input type='text' name="password" placeholder='Password' className="rounded-lg bg-transparent w-full" required></input>
@@ -298,81 +198,194 @@ const UserProfile = ({ page, setPage, formRef, imageUrl, setImageUrl, image, set
 }
 
 
-
-const Address = ({ page, setPage }) => {
-
-
+const Formdisp = () => {
     return (
-        <div className={`absolute - ${(page == 1) ? ' z-40 ' : ' -z-40 '}`}>
-            <h1 className='text-3xl font-bold'>Address</h1>
-            <hr className='border-slate-400 border-1 my-5'></hr>
-            <div className='grid grid-cols-2 gap-10'>
-                <div>
-                    <p>Village</p>
-                    <input type='text' name="name" placeholder='Your Full Name' className="rounded-lg bg-transparent w-full" required></input>
-                </div>
-                <div>
-                    <p>District</p>
-                    <input type='text' name="name" placeholder='Email' className="rounded-lg bg-transparent w-full" required></input>
-                </div>
-                <div>
-                    <p>Division</p>
-                    <input type='text' name="name" placeholder='Phone Number' className="rounded-lg bg-transparent w-full" required></input>
-                </div>
-                <div>
-                    <p>Country</p>
-                    <input type='text' name="name" placeholder='Education Label' className="rounded-lg bg-transparent w-full" required></input>
-                </div>
-                <div>
-                    <p>Plannet</p>
-                    <input type='text' name="name" placeholder='Name' className="rounded-lg bg-transparent w-full" required></input>
-                </div>
-                <div>
-                    <p>Galaxy</p>
-                    <input type='text' name="name" placeholder='Name' className="rounded-lg bg-transparent w-full" required></input>
-                </div>
-            </div>
-
+        <div className='lg:w-8/12 lg:h-[511px] p-8 bg-teal-100  rounded-xl font-semibold '>
+            <UserProfilee></UserProfilee>
         </div>
     )
 }
 
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
+
+const UserProfilee = () => {
+
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const [signUpError, setSignUpError] = useState('');
+    const password = watch("password", "");
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const { signUp, uploadImg, updateProfile } = useContext(Context);
+    const [loading, setLoading] = useState(false);
 
 
-const JobDescription = ({ page }) => {
+    const handleSignUp = async (userData) => {
+        setSignUpError('')
+        console.log("just touch", userData);
+
+        try {
+            signUp(userData.email, userData.password)
+                .then(userCredential => {
+
+                    console.log("userCredential", userCredential);
+                    const user = userCredential.user;
+
+                    updateProfile(user, {
+                        displayName: userData.occupation
+                    }).then(() => {
+                        console.log('Username set successfully:', user.displayName);
+                        console.log('User:', user);
+                        const { uid } = user
+                        saveUser(uid);
+                    }).catch(err => console.log(err))
+                    alert('User Created successfully.')
+                })
+                .catch(error => {
+                    setSignUpError(error.message)
+                    console.log(error)
+                })
+
+
+            const saveUser = (uid) => {
+                console.log("touch uid", uid);
+
+                fetch('http://localhost:5000/addUser', {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "_id": uid,
+                        "name": userData.name,
+                        "email": userData.email,
+                        "password": userData.password,
+                        "phone": userData.phone,
+                        "occupation": userData.occupation,
+                        "img": "nulll"
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                        alert('User save in backend.', data)
+                    })
+                .catch(err=>{console.log("backend error", err.message);})
+            }
+
+        } catch (error) {
+            console.log("error", error.message);
+            setSignUpError(error.message)
+        }
+    }
+
     return (
-        <div className={`absolute - ${(page == 2) ? ' z-40 ' : ' -z-40 '}`}>
-            <h1 className='text-3xl font-bold'>Job Description</h1>
-            <hr className='border-slate-400 border-1 my-5'></hr>
-            <div className='grid grid-cols-2 gap-10'>
-                <h1>From Job description... it will update later</h1>
-            </div>
-        </div>
-    )
-}
+        <div>
+            <h1 className='text-3xl font-bold'>Registration</h1>
+            <hr className='border-slate-400 border-1 my-2'></hr>
+
+            <form onSubmit={handleSubmit(handleSignUp)}>
+                <div className='grid grid-cols-2 gap-2'>
+
+                    <div className='form-control'>
+                        <label>Full Name</label>
+                        <input type='text' className="rounded-lg bg-transparent w-full"
+                            placeholder='Your Full Name'
+                            {...register("name", {
+                                required: "Name is required",
+                                pattern: { value: /^[A-Z][A-Za-z .]{3,20}$/, message: 'must be 4 letters or longer with the initial letter capitalized.' }
+                            })} />
+                        {errors.name && <p role="alert"><span className="label-text-alt text-red-500">{errors.name.message}</span></p>}
+
+                    </div>
+
+                    <div className='form-control'>
+                        <label>Email</label>
+                        <input type='text' className="rounded-lg bg-transparent w-full"
+                            placeholder='Email'
+                            {...register("email", {
+                                required: "Email is required",
+                                pattern: { value: /(cse|eee|law)_\d{10}@lus\.ac\.bd/, message: 'only dept_id@lus.ac.bd allow.' }
+                            })} />
+                        {errors.email && <p role="alert"><span className="label-text-alt text-red-500">{errors.email.message}</span></p>}
+                    </div>
 
 
-const BankInformations = ({ page }) => {
-    return (
-        <div className={`absolute - ${(page == 3) ? ' z-40 ' : ' -z-40 '}`}>
-            <h1 className='text-3xl font-bold'>Job Bank Informations & Others</h1>
-            <hr className='border-slate-400 border-1 my-5'></hr>
-            <div className='grid grid-cols-2 gap-10'>
-                <h1>From Job description... it will update later</h1>
-            </div>
-        </div>
-    )
-}
+                    <div className='form-control'>
+                        <label>Phone</label>
+                        <input type='number' className="rounded-lg bg-transparent w-full"
+                            placeholder='Phone Number'
+                            {...register("phone", {
+                                required: "Phone is required",
+                                pattern: { value: /(\+88)?-?01[3-9]\d{8}/, message: 'Number must be eleven-digit.' }
+                            })} />
+                        {errors.phone && <p role="alert"><span className="label-text-alt text-red-500">{errors.phone.message}</span></p>}
+                    </div>
+
+                    <div className='form-control'>
+                        <label>Occupation</label>
+                        <select
+                            className="rounded-lg bg-transparent w-full"
+                            {...register("occupation", {
+                                required: "Occupation Label is required",
+                            })}
+                        >
+                            <option value="">Select an option</option>
+                            <option value="Teacher">Teacher</option>
+                            <option value="Student">Student</option>
+                        </select>
+                        {errors.occupation && (
+                            <p role="alert">
+                                <span className="label-text-alt text-red-500">
+                                    {errors.occupation.message}
+                                </span>
+                            </p>
+                        )}
+                    </div>
+
+                    <div className='form-control'>
+                        <label>Password</label>
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            className="rounded-lg bg-transparent w-full"
+                            placeholder='Password'
+                            {...register("password", {
+                                required: "Password is required",
+                                pattern: {
+                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>]).{8,}$/,
+                                    message: 'Password must be 8+ characters include uppercase, lowercase, digit, special.'
+                                }
+                            })}
+                        />
+                        <span className='cursor-pointer' onClick={togglePasswordVisibility}>{showPassword ? 'Hide' : 'Show'}</span>
+                        {errors.password && <p role="alert"><span className="label-text-alt text-red-500">{errors.password.message}</span></p>}
+                    </div>
+
+                    <div className='form-control'>
+                        <label>Confirm Password</label>
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            className="rounded-lg bg-transparent w-full"
+                            placeholder='Confirm Password'
+                            {...register("cfpassword", {
+                                required: "Confirm Password is required",
+                                validate: value => value === password || "Passwords do not match"
+                            })}
+                        />
+                        <span className='cursor-pointer' onClick={togglePasswordVisibility}>{showPassword ? 'Hide' : 'Show'}</span>
+                        {errors.cfpassword && <p role="alert"><span className="absolate label-text-alt text-red-500">{errors.cfpassword.message}</span></p>}
+                    </div>
 
 
-const UploadDocuments = ({ page }) => {
-    return (
-        <div className={`absolute - ${(page == 4) ? ' z-40 ' : ' -z-40 '}`}>
-            <h1 className='text-3xl font-bold'>Job Upload documents</h1>
-            <hr className='border-slate-400 border-1 my-5'></hr>
-            <div className='grid grid-cols-2 gap-10'>
-                <h1>From Job description... it will update later</h1>
-            </div>
+                    <small className='mt-2 font-bold'>Already have an account? <Link to={"/login"} className='text-blue-500'>Login !</Link></small>
+                    <br />
+                    <input type='submit' value='Sign Up' className="btn btn-dark rounded-lg bg-transparent w-full"></input>
+                    {signUpError && <p className='text-red-600'>{signUpError}</p>}
+                </div>
+            </form>
         </div>
     )
 }

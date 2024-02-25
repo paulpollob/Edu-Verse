@@ -26,14 +26,6 @@ const logIn = (email, password) => {
 }
 
 
-
-
-
-
-
-
-
-
 const EduContext = ({ children }) => {
 
     const [leftRoute, setLeftRoute] = useState(0)
@@ -70,7 +62,7 @@ const EduContext = ({ children }) => {
                     )
                 })
                 .then(res => res.json())
-                .then((data) => { setTeacherID(data?._id); setUser(data);  console.log("HK user updated: ", user)})
+                .then((data) => { setTeacherID(data?._id); setUser(data);})
                 .catch((error) => console.log("Error:", error)); 
             } else {
                 // setUser({})

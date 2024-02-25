@@ -1,76 +1,31 @@
-import { FaChalkboardTeacher } from 'react-icons/fa'
-import { AiFillClockCircle } from 'react-icons/ai'
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { MdGroup } from 'react-icons/md';
-
+import { Link } from 'react-router-dom';
 
 const Home = () => {
     return (
-        <div className="">
-            <Activities></Activities>
+        <div>
+            <img className="absolute w-[420px] h-[590px] opacity-25 right-0  my-[-310px]" src="https://i.ibb.co/51QD95F/banner-shape02.png" alt="side photo" />
+            <div className='flex justify-between'>
+                <img className=" my-[-30px]" src="https://i.ibb.co/fMd12gB/logo.png" alt="logo" />
+                <div className='flex gap-8 mr-40'>
+                    <Link className='font-bold text-lg'>About</Link>
+                    <Link className='font-bold text-lg'>Contact</Link>
+                </div>
+            </div>
+
+            <div className="grid lg:grid-cols-2 sm:grid-cols-1">
+                <div className='lg:my-16 lg:p-12 lg:ml-16 sm:my-8'>
+                    <h1 className='lg:text-7xl sm:text-4xl text-4xl'>VIRTUAL</h1>
+                    <h1 className='lg:text-7xl sm:text-4xl text-4xl text-teal-700'>CLASSROOM</h1>
+                    <h3 className='my-2 font-semibold'>Unlock Your Potential Today with Interactive Learning. Join Us Online for an Enlightening Educational Journey.</h3>
+                    <Link className="btn btn-primary bg-teal-400  lg:my-10 lg:w-64 font-bold lg:text-lg " to="/login">GET STARTED</Link>
+                </div>
+                <div>
+                    <img className="my-[-16px] w-[800px] h-[600px] " src="https://i.ibb.co/vXCWk9x/frontImg.png" alt="Current profile photo" />
+                </div>
+            </div>
+
         </div>
     );
 };
-
-
-const Activities = () => {
-    return (
-        <div className="flex flex-col gap-5 bg-slate-50 text-slate-600 p-10 rounded-xl">
-            <h1 className="font-bold text-2xl my-2">Next Activities</h1>
-            <div className='bg-green-200 flex justify-between border px-3 py-4 rounded-xl'>
-                <div className='flex gap-5'>
-                    <div className='bg-green-700 inline-block p-3 rounded-lg'>
-                        <FaChalkboardTeacher className='text-slate-50 w-5 h-5' />
-                    </div>
-                    <div className='flex flex-col justify-between'>
-                        <div className='flex gap-5'>
-                            <small>16 Nov 15:00</small>
-                            <small className='flex items-center gap-2'>
-                                <AiFillClockCircle />
-                                1.5h</small>
-                        </div>
-                        <h1 className='font-bold'>Lesson with Teacher</h1>
-                    </div>
-                </div>
-
-                <div className='flex items-center gap-5'>
-                    <button className='bg-slate-50 hover:bg-slate-200 px-4 py-1'>Rechedule</button>
-                    <button  className='bg-slate-50 hover:bg-slate-200 px-4 py-1'>To Calender</button>
-                    <BsThreeDotsVertical/>
-                </div>
-
-            </div>
-
-
-            <div className='bg-pink-200 flex justify-between border px-3 py-4 rounded-xl'>
-                <div className='flex gap-5'>
-                    <div className='bg-pink-700 inline-block p-3 rounded-lg'>
-                        <MdGroup className='text-slate-50 w-5 h-5' />
-                    </div>
-                    <div className='flex flex-col justify-between'>
-                        <div className='flex gap-5'>
-                            <small>16 Nov 15:00</small>
-                            <small className='flex items-center gap-2'>
-                                <AiFillClockCircle />
-                                1.5h</small>
-                        </div>
-                        <h1 className='font-bold'>speaking Club</h1>
-                    </div>
-                </div>
-
-                <div className='flex items-center gap-5'>
-                    <div className=' px-4 py-1 flex items-center'>
-                        <img className='w-8 h-8 rounded-xl border-2 border-slate-50' src='https://i.imgur.com/asLPUCK.jpg' alt='not found' />
-                        <img className='shadow-lg relative -left-3 w-9 h-9 rounded-xl border-2 border-slate-50 ' src='https://i.imgur.com/asLPUCK.jpg' alt='not found' />
-                        <div className='shadow-xl relative flex items-center justify-center -left-6 w-10 h-10 rounded-xl border-2 bg-slate-50' >+8 </div>
-                    </div>
-                    <button  className='bg-slate-50 hover:bg-slate-200 px-4 py-1'>To Calender</button>
-                    <BsThreeDotsVertical/>
-                </div>
-
-            </div>
-        </div>
-    )
-}
 
 export default Home;
