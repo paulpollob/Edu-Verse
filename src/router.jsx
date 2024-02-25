@@ -31,6 +31,7 @@ export const router = createBrowserRouter([
             }
         ]
     },
+
     {
         path: '/tc',
         element: <PrivateRoute><TeacherMain></TeacherMain></PrivateRoute>,
@@ -49,6 +50,8 @@ export const router = createBrowserRouter([
             }
         ]
     },
+
+    
     {
         path: '/st',
         element : <StMain></StMain>,
@@ -67,6 +70,8 @@ export const router = createBrowserRouter([
             }
         ]
     },
+
+
     {
         path: '/register',
         element: <Register></Register>
