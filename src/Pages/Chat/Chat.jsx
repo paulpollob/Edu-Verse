@@ -38,8 +38,15 @@ const Chat = () => {
                 body: JSON.stringify({ 'user': msges[msges.length - 1]?.details })
             })
                 .then(res => res.json())
-                .then((data) => { setMsges([...msges, { 'type': 'answer', 'details': data }]); setLoading(false) })
-                .catch((error) => console.log("Error:", error));
+                .then((data) => { 
+                    if (data.error){
+                        alert("Server Error:", data.error);
+                        setLoading(false); 
+                        return;
+                    }
+                    setMsges([...msges, { 'type': 'answer', 'details': data }]); setLoading(false) 
+                })
+                .catch((error) => {alert("Server Error:", error); setLoading(false);});
         }
         if (flg != 0) msg();
     }, [flg]);

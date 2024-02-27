@@ -46,15 +46,24 @@ const LoadVideo = ({ connected, setConnected, loading, setLoading, msges, setMsg
 
 
         const load = () => {
-            fetch('http://192.168.1.6:8000/load_YoutubeText',
+            fetch('http://localhost:8000/load_YoutubeText',
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ "url": url })
                 })
                 .then(res => res.json())
-                .then((data) => { setConnected(data.success);setLoading(false); setMsges([]); })
-                .catch((error) => console.log("Error:", error));
+                .then((data) => { 
+                    if (data.error){
+                        alert("Server Error:", data.error);
+                        setLoading(false); 
+                        return;
+                    }
+                    setConnected(data.success);
+                    setLoading(false); 
+                    setMsges([]); 
+                })
+                .catch((error) => {alert("Server Error:", error); setLoading(false);});
         }
         if (flg != 0) load()
 
@@ -109,16 +118,22 @@ const Chat = ({msges, setMsges}) => {
     }
     useEffect(() => {
         const msg = () => {
-            fetch('http://192.168.1.6:8000/chat_Youtubegemini', {
+            fetch('http://localhost:8000/chat_Youtubegemini', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 'user': msges[msges.length - 1]?.details })
             })
                 .then(res => res.json())
-                .then((data) => {setMsges([...msges, { 'type': 'answer', 'details': data.output_text }]); setLoading(false) })
-                .catch((error) => console.log("Error:", error));
-
-
+                .then((data) => {
+                    if (data.error){
+                        alert("Server Error:", data.error);
+                        setLoading(false); 
+                        return;
+                    }
+                    setMsges([...msges, { 'type': 'answer', 'details': data.output_text }]); 
+                    setLoading(false) 
+                })
+                .catch((error) => {alert("Server Error:", error); setLoading(false);});
 
         }
 

@@ -31,6 +31,7 @@ const PDFChat = () => {
             }
         } else {
             alert("Select a valid PDF file");
+            setUplding(false);
         }
     }
     const editPdf = (event) => {
@@ -80,8 +81,16 @@ const PDFChat = () => {
                 body: JSON.stringify({ "usertext": txt })
             })
                 .then(res => res.json())
-                .then((data) => { setConnected(data.success); setUplding(false) })
-                .catch((error) => console.log("Error:", error));
+                .then((data) => { 
+                    if (data.error){
+                        alert("Server Error:", data.error);
+                        setUplding(false); 
+                        return;
+                    }
+                    setConnected(data.success); 
+                    setUplding(false);
+                })
+                .catch((error) => {alert("Server Error:", error); setUplding(false);});
         }
         if (flg != 0) load();
 
@@ -140,17 +149,17 @@ const Chat = ({msges, setMsges}) => {
                 body: JSON.stringify({ 'user': msges[msges.length - 1]?.details })
             })
                 .then(res => res.json())
-                .then((data) => { setMsges([...msges, { 'type': 'answer', 'details': data.output_text }]); setLoading(false) })
-                .catch((error) => console.log("Error:", error));
-
-
-
+                .then((data) => {
+                    if (data.error){
+                        alert("Server Error:", data.error);
+                        setLoading(false); 
+                        return;
+                    }
+                    setMsges([...msges, { 'type': 'answer', 'details': data.output_text }]); setLoading(false) })
+                .catch((error) => {alert("Server Error:", error); setLoading(false);});
         }
 
         if (flg != 0) msg();
-
-
-
     }, [flg]);
 
 
