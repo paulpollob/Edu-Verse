@@ -26,13 +26,13 @@ const StLeftSideBar = () => {
             <hr className='border-1 mb-3 border-slate-400'></hr>
 
             <div className='flex  flex-col text-slate-600'>
-                <Link to={'/st/'} className={`${leftRoute == 0 && 'bg-slate-50 '} rounded-lg py-2 px-5 hover:bg-slate-200  cursor-pointer	 flex items-center gap-6 font-bold`}>
-                <img src={home} className='w-12 h-12' alt='not found' />
+                <Link to={'/st/'} className={`${leftRoute == 0 && 'bg-slate-50 '} rounded-lg py-2 px-5 hover:bg-slate-200  cursor-pointer 	 flex items-center gap-6 font-bold`}>
+                    <img src={home} className='w-12 h-12' alt='not found' />
                     <h2>Home</h2>
                 </Link>
 
                 <Link to={'/st/Classroom'} className={`${leftRoute == 1 && 'bg-slate-50 '} rounded-lg py-2 px-5 hover:bg-slate-200  cursor-pointer	 flex items-center gap-6 font-bold`}>
-                <img src={classroom} className='w-12 h-12' alt='not found' />
+                    <img src={classroom} className='w-12 h-12' alt='not found' />
 
                     <h2>Classroom</h2>
                 </Link >

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { IoSend } from 'react-icons/io5';
 import { Context } from '../../Context/EduContext';
+import botlogo from '../../assets/images/gchat.png'
 
 const PDFChat = () => {
     const { tcLeftRoute, setTcLeftRoute } = useContext(Context);
@@ -73,7 +74,7 @@ const PDFChat = () => {
 
     useEffect(() => {
         const load = () => {
-            fetch('http://192.168.1.6:8000/pdfTextLoaded', {
+            fetch('http://localhost:8000/pdfTextLoaded', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ "usertext": txt })
@@ -133,7 +134,7 @@ const Chat = ({msges, setMsges}) => {
     useEffect(() => {
 
         const msg = () => {
-            fetch('http://192.168.1.6:8000/chatPDFgemini', {
+            fetch('http://localhost:8000/chatPDFgemini', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 'user': msges[msges.length - 1]?.details })
@@ -162,7 +163,7 @@ const Chat = ({msges, setMsges}) => {
 
             </div>
             <form onSubmit={send} className=' p-5 flex justify-between items-center gap-3 w-full'>
-                <img className='rounded-full h-10 w-10' src='https://i.imgur.com/asLPUCK.jpg'></img>
+                <img className='rounded-full h-10 w-10' src={botlogo}></img>
                 <input name='msg' type='text' placeholder='Write Your Message...' className='border rounded-lg w-full' />
                 <button type='submit' className='focus:border-0 border-1 text-3xl'><IoSend /></button>
             </form>
@@ -187,7 +188,7 @@ const CreateMsg = ({ msges, loading }) => {
                     else if (msg.type == "answer")
                         return (
                             <div id={(msges[msges.length - 1]?.details == msg.details) ? 'id' : 'k'} className='w-full flex justify-start'>
-                                <img className='h-10 w-10 rounded-full' src='./../../assets/logo.png' alt='no img' />
+                                <img className='h-10 w-10 rounded-full' src={botlogo} alt='no img' />
 
                                 <div className='rounded-lg text-white flex justify-start  text-justify text-balance p-2 bg-blue-500 max-w-lg'>
                                     {msg.details}
@@ -197,7 +198,7 @@ const CreateMsg = ({ msges, loading }) => {
                     else
                         return (
                             <div>
-                                <img className='h-10 w-10 rounded-full' src='./../../assets/logo.png' alt='no img' />
+                                <img className='h-10 w-10 rounded-full' src={botlogo} alt='no img' />
 
                                 <span className="loading loading-dots loading-lg"></span>
                             </div>
@@ -206,7 +207,7 @@ const CreateMsg = ({ msges, loading }) => {
             }
             {
                loading && <div className='w-full flex justify-start py-5 gap-3'>
-                    <img className='h-10 w-10 rounded-full' src='./../../assets/logo.png' alt='no img' />
+                    <img className='h-10 w-10 rounded-full' src={botlogo} alt='no img' />
 
                     <span className="loading loading-dots loading-md"></span>
                 </div>
