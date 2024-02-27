@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MdOutlineAssignment } from "react-icons/md";
+import { pdfjs } from 'react-pdf';
 
 
 
@@ -73,6 +74,13 @@ export const Assignment = ({ asgnmnt }) => {
 
 const Submission = () => {
 
+    const file =  fetch('http://localhost:5000/files/1708983154899NSTKYP.pdf',
+    {
+        method: 'GET'
+    })
+    .then(res => {res.json();console.log("HK response: ", res)})
+    .then(data => { console.log("HK: ", data, " for: ")})
+
    
     return (
         <dialog id="Submission" className="modal modal-bottom  ">
@@ -81,6 +89,9 @@ const Submission = () => {
                 <div className="modal-action">
                     <form method="dialog" className='w-full flex justify-between'>
                         {/* if there is a button in form, it will close the modal */}
+                        <iframe src='http://localhost:5000/files/1708584416789ppp_resume.pdf'>
+
+                        </iframe>
                         <button className="btn btn-outline">Close</button>
                         <button o  className="btn btn-outline" >Submit</button>
                     </form>
