@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { IoSend } from 'react-icons/io5';
 import { Context } from '../../Context/EduContext';
+import botlogo from '../../assets/images/gchat.png'
 
 const VideoText = () => {
     const { tcLeftRoute, setTcLeftRoute } = useContext(Context);
@@ -178,7 +179,7 @@ const CreateMsg = ({ msges, loading }) => {
                     else if (msg.type == "answer")
                         return (
                             <div id={(msges[msges.length - 1]?.details == msg.details) ? 'id' : 'k'} className='w-full flex justify-start'>
-                                <img className='h-10 w-10 rounded-full' src='./../../assets/logo.png' alt='no img' />
+                                <img className='h-10 w-10 rounded-full' src={botlogo} alt='no img' />
 
                                 <div className='rounded-lg text-white flex justify-start  text-justify text-balance p-2 bg-blue-500 max-w-lg'>
                                     {msg.details}
@@ -190,7 +191,7 @@ const CreateMsg = ({ msges, loading }) => {
             }
             {
                loading && <div className='w-full flex justify-start py-5 gap-3'>
-                    <img className='h-10 w-10 rounded-full' src='./../../assets/logo.png' alt='no img' />
+                    <img className='h-10 w-10 rounded-full' src={botlogo} alt='no img' />
 
                     <span className="loading loading-dots loading-md"></span>
                 </div>
