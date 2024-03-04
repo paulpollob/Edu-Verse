@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Context } from '../Context/EduContext';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 const Register = () => {
 
@@ -211,6 +211,8 @@ import axios from 'axios';
 
 const UserProfilee = () => {
 
+    const navigate = useNavigate();
+
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const [signUpError, setSignUpError] = useState('');
     const password = watch("password", "");
@@ -226,6 +228,7 @@ const UserProfilee = () => {
 
     const handleSignUp = async (userData) => {
         setSignUpError('')
+        setLoading(true)
         console.log("just touch", userData);
 
         try {
@@ -242,12 +245,18 @@ const UserProfilee = () => {
                         console.log('User:', user);
                         const { uid } = user
                         saveUser(uid);
+                        setLoading(false)
+
                     }).catch(err => console.log(err))
                     alert('User Created successfully.')
+                    setLoading(false)
                 })
                 .catch(error => {
                     setSignUpError(error.message)
                     console.log(error)
+                    alert(error.message)
+                    setLoading(false)
+
                 })
 
 
@@ -269,16 +278,22 @@ const UserProfilee = () => {
                         "img": "nulll"
                     })
                 })
-                .then(res => res.json())
-                .then(data => {
+                    .then(res => res.json())
+                    .then(data => {
                         alert('User save in backend.', data)
+                        navigate('/login')
+                        setLoading(false)
+
                     })
-                .catch(err=>{console.log("backend error", err.message);})
+                    .catch(err => { console.log("backend error", err.message); setLoading(false) })
             }
 
         } catch (error) {
             console.log("error", error.message);
             setSignUpError(error.message)
+            alert(error.message)
+            setLoading(false)
+
         }
     }
 
@@ -382,8 +397,8 @@ const UserProfilee = () => {
 
                     <small className='mt-2 font-bold'>Already have an account? <Link to={"/login"} className='text-blue-500'>Login !</Link></small>
                     <br />
-                    <input type='submit' value='Sign Up' className="btn btn-dark rounded-lg bg-transparent w-full"></input>
-                    {signUpError && <p className='text-red-600'>{signUpError}</p>}
+                    <button type='submit' className="btn btn-dark rounded-lg bg-transparent w-full">{loading ? <span className="loading loading-ball loading-md"></span> : "Sign Up"}</button>
+                    {/* {signUpError && <p className='text-red-600'>{signUpError}</p>} */}
                 </div>
             </form>
         </div>

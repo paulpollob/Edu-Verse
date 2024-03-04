@@ -173,6 +173,7 @@ export const Assignment = ({ asgnmnt, classID }) => {
         data.append("classID", classID)
         data.append("authorID", user._id)
         data.append("assignmentID", asgnmnt._id)
+        data.append("authorName", user.name)
         fetch('http://localhost:5000/storeFile', {
             method: 'POST',
             body: data,

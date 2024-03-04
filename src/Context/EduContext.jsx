@@ -26,25 +26,34 @@ const logIn = (email, password) => {
 }
 
 
-const EduContext = ({ children }) => {
+const EduContext = ({ children }) => { 
 
     const [leftRoute, setLeftRoute] = useState(0)
     const [tcLeftRoute, setTcLeftRoute] = useState(0)
     const [teacherID, setTeacherID] = useState("")
     const [user, setUser] = useState({})
-    const [userLoading, setUserLoading] = useState(false)
+    const [userLoading, setUserLoading] = useState(true)
     const [update, setUpdate] = useState(false)
 
 
 
-    const logOut = ()=>{
+    const logOut = ()=>{ 
+        // setUserLoading(false)
         setUser({})
         return signOut(auth) 
     }
 
+    // useEffect(()=>
+    // {
+    //     (!(user?.email===null)) ? setUserLoading(true):setUserLoading(false)
+    // },[user])
+
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
+            // setUserLoading(false)
+            console.log("HK, ", user)
+            if (user) { 
                 // User is signed in, see docs for a list of available properties
                 // https://firebase.google.com/docs/reference/js/auth.user
                 const uid = user.uid;
@@ -62,11 +71,12 @@ const EduContext = ({ children }) => {
                     )
                 })
                 .then(res => res.json())
-                .then((data) => { setTeacherID(data?._id); setUser(data);})
-                .catch((error) => console.log("Error:", error)); 
+                .then((data) => { setTeacherID(data?._id); setUser(data); setUserLoading(false)})
+                .catch((error) => {console.log("Error:", error); setUserLoading(false)}); 
             } else {
-                // setUser({})
-                logOut() 
+                setUserLoading(false)
+                // setUser({}) 
+                logOut()  
                 // alert("HK no user") 
             }
         });
@@ -74,10 +84,6 @@ const EduContext = ({ children }) => {
         return () => { return unsubscribe() }
     }, [update])
 
-    useEffect(()=>
-    {
-        (user.email==null) ? setUserLoading(false):setUserLoading(true)
-    },[user])
 
 
 

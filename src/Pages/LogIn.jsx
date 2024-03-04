@@ -1,21 +1,29 @@
 import React, { useContext, useState } from 'react';
 import { Context } from '../Context/EduContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 const LogIn = () => {
     const navigate = useNavigate();
     const { user, userLoading } = useContext(Context)
-    if (userLoading && !(user.email == null)) (user.displayName == "Teacher") ? navigate("/tc") : navigate("/st")
+    console.log("HK user: ", user, " ", user?.occupation, (user?.occupation == "Teacher"))
+    if (user?.occupation == "Teacher") return <Navigate to={'/tc'} > </Navigate>
+    if (user?.occupation == "Student") return <Navigate to={'/st'} > </Navigate>
     const [page, setPage] = useState(0)
+    // alert("HK")
 
     return (
-        <div className='bg-white min-w-screen min-h-screen'>
-            <Header page={page}></Header>
-            <div className='lg:flex lg:gap-5 lg:py-10 lg:px-44  rounded-lg'>
-                <Sidebar page={page} setPage={setPage}></Sidebar>
-                <Disp page={page} setPage={setPage}></Disp>
-            </div>
-            <div className='p-5 lg:p-0'></div>
+        <div className='w-full h-screen bg-slate-50'>
+            {
+                <div className='bg-white min-w-screen min-h-screen'>
+
+                    <Header page={page}></Header>
+                    <div className='lg:flex lg:gap-5 lg:py-10 lg:px-44  rounded-lg'>
+                        <Sidebar page={page} setPage={setPage}></Sidebar>
+                        <Disp page={page} setPage={setPage}></Disp>
+                    </div>
+                    <div className='p-5 lg:p-0'></div>
+                </div>
+            }
         </div>
     );
 };
@@ -126,8 +134,11 @@ const UserProfile = () => {
 }
 
 import { useForm } from 'react-hook-form';
+import Load from '../Load';
 
 const UserProfilee = () => {
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false)
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [loginError, setloginError] = useState('');
 
@@ -138,43 +149,55 @@ const UserProfilee = () => {
 
     const { logIn, setTeacherID, user, setUser } = useContext(Context);
 
-    const handleLogin =(userData) => {
+    const handleLogin = (userData) => {
         setloginError('')
-        
+        setLoading(true) 
         try {
             logIn(userData.email, userData.password)
-            .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                const { uid, displayName } = user
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    const { uid, displayName } = user
 
-                fetch('http://localhost:5000/getUserInfo',
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(
-                            {
-                                "_id": uid,
-                                "cllctn": displayName
-                            }
-                        )
-                    })
-                    .then(res => res.json())
-                    .then(async (data) => { 
-                        setTeacherID(data._id); 
-                        setUser(data); 
-                        (displayName == "Teacher") ? navigate("/tc") : navigate("/st") })
+                    fetch('http://localhost:5000/getUserInfo',
+                        {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(
+                                {
+                                    "_id": uid,
+                                    "cllctn": displayName
+                                }
+                            )
+                        })
+                        .then(res => res.json())
+                        .then(async (data) => {
+                            setTeacherID(data._id);
+                            setUser(data);
+                            (displayName == "Teacher") ? navigate("/tc") : navigate("/st")
 
-                    .catch((error) => { 
-                        alert(error) 
-                    });
-            })
+                            setLoading(false)
+                        })
+
+                        .catch((error) => {
+                            console.log("HK error from login: ", error)
+                            setLoading(false)
+
+                            alert(error)
+                        });
+                })
+                .catch((error) => { 
+                    alert(error.message)
+                    setLoading(false)
+
+                }
+                )
 
 
             console.log(userData);
-        } catch (error) {
-            console.log("error", error.message);
+        } catch (error) { 
             alert(error)
+            setLoading(false)
         }
     }
 
@@ -218,7 +241,7 @@ const UserProfilee = () => {
                 </div>
                 <div className='mt-5'>
                     <small className='my-8 font-bold'>New Here? Click here to  <Link to={"/register"} className='text-blue-500'>registration !</Link></small>
-                    <input type='submit' value='Login' className="mt-3 btn btn-dark rounded-lg bg-transparent w-6/12"></input>
+                    <button type='submit' className="mt-3 btn btn-dark rounded-lg bg-transparent w-6/12">{loading ? <span className="loading loading-ball loading-md"></span> : "Login"}</button>
                     {loginError && <p className='text-red-600'>{loginError}</p>}
                 </div>
 
