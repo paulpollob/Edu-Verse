@@ -46,7 +46,7 @@ const Task = ({ classID }) => {
 
             <div className=' flex flex-col gap-16 mt-2 mb-16 h-full overflow-auto scroll-m-6'>
                 <div className='h-full mb-10'>
-                    <h1 className='bg-slate-50 border-b-2 py-2 font-bold sticky top-0'>Quiz</h1>
+                    <h1 className=' border-b-2 py-2 font-bold sticky top-0'>Quiz</h1>
                     <div className=" h-full flex flex-col gap-3 p-5  ">
                         {tasks?.length}
 
@@ -62,7 +62,7 @@ const Task = ({ classID }) => {
                 {/* <div className='h-10'></div> */}
 
                 <div className='h-full mb-10'>
-                    <h1 className='bg-slate-50 border-b-2 py-2 font-bold sticky top-0'>Assignments</h1>
+                    <h1 className=' border-b-2 py-2 font-bold sticky top-0'>Assignments</h1>
                     <div className=" h-full flex flex-col gap-3 p-5  ">
                         {assignemnts?.length}
 

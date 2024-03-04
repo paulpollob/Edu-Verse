@@ -8,7 +8,7 @@ import { pdfjs } from 'react-pdf';
 const Quiz = ({ task }) => {
     // console.log("HK time ", task.createTime)
     return (
-        <div className='shadow-md cursor-pointer border rounded-lg p-5 flex items-center gap-4'>
+        <div className='bg-white shadow-md cursor-pointer border rounded-lg p-5 flex items-center gap-4'>
             <div className='text-slate-50 bg-blue-400 rounded-full p-2 text-3xl '><MdOutlineAssignment /></div>
             <div className='w-full flex flex-col gap-2'>
                 <h1 className='font-bold my-0'>{task.quizTitle}</h1>
@@ -36,14 +36,14 @@ export const Assignment = ({ asgnmnt }) => {
                 headers: { 'Content-Type': 'application/json' },
             })
             .then(res => res.json())
-            .then(data => {setAns(data);console.log("HK: ", data, " for: ", asgnmnt.title)})
+            .then(data => { setAns(data); console.log("HK: ", data, " for: ", asgnmnt.title) })
     }, [])
 
 
 
     return (
         <div className='flex flex-col'>
-            <div onClick={() => setExpand(!expand)} className='shadow-md cursor-pointer border rounded-lg p-5 flex items-center gap-4'>
+            <div onClick={() => setExpand(!expand)} className='bg-white shadow-md cursor-pointer border rounded-lg p-5 flex items-center gap-4'>
                 <div className='text-slate-50 bg-blue-400 rounded-full p-2 text-3xl '><MdOutlineAssignment /></div>
                 <div className='w-full flex flex-col gap-2'>
                     <h1 className='font-bold my-0'>{asgnmnt.title}</h1>
@@ -53,7 +53,7 @@ export const Assignment = ({ asgnmnt }) => {
                     </div>
                 </div>
             </div>
-            <div className={`flex shadow-md ${expand ? 'p-5 h-auto' : 'h-0 p-0'} overflow-hidden`}>
+            <div className={` bg-white flex shadow-md ${expand ? 'p-5 h-auto' : 'h-0 p-0'} overflow-hidden`}>
                 <div className='w-8/12'>
                     <h1 className='text-sm font-bold border-b-2 py-3'>Description</h1>
                     <small className='text-justify'>{asgnmnt.description}</small>
@@ -61,43 +61,85 @@ export const Assignment = ({ asgnmnt }) => {
                 <div>
                     <div className='w-full flex flex-col mx-5'>
                         <h1 className='border-b-2 my-5'>Total Submit:{ans?.response?.length}</h1>
-                        <button onClick={()=>document.getElementById('Submission').showModal()} className='btn btn-outline px-0 py-0'>View Submission</button>
+                        <button onClick={() => document.getElementById('Submission').showModal()} className='btn btn-outline px-0 py-0'>View Submission</button>
                     </div>
                 </div>
             </div>
-            <Submission></Submission>
+            <Submission ans={ans?.response}></Submission>
         </div>
     );
 };
 
 
 
-const Submission = () => {
+const Submission = ({ ans }) => {
 
-    const file =  fetch('http://localhost:5000/files/1708983154899NSTKYP.pdf',
-    {
-        method: 'GET'
-    })
-    .then(res => {res.json();console.log("HK response: ", res)})
-    .then(data => { console.log("HK: ", data, " for: ")})
 
-   
+    console.log("HK ans: ", ans)
+    const [file, setFile] = useState(null)
+    const [data, setData] = useState({})
+
+    const [selectedValue, setSelectedValue] = useState('option1');
+
+    const handleChange = (event) => {
+        setSelectedValue(event.target.value);
+    };
+
+    const handle = (event) => {
+        const d = (event.target.selectedOptions[0].value).replace('\\', '/')
+        setFile(d)
+        console.log("HK: ", d)
+        console.log("HK file is: ", event.target.selectedOptions[0].value)
+    }
+
+    // const file =  fetch('http://localhost:5000/files/1708983154899NSTKYP.pdf',
+    // {
+    //     method: 'GET'
+    // })
+    // .then(res => {res.json();console.log("HK response: ", res)})
+    // .then(data => { console.log("HK: ", data, " for: ")})
+
+
     return (
         <dialog id="Submission" className="modal modal-bottom  ">
             <div className="modal-box bg-slate-50 ">
-                
-                <div className="modal-action">
+
+                <div className="modal-action flex flex-col gap-5">
                     <form method="dialog" className='w-full flex justify-between'>
                         {/* if there is a button in form, it will close the modal */}
-                        <iframe src='http://localhost:5000/files/1708584416789ppp_resume.pdf'>
-
-                        </iframe>
                         <button className="btn btn-outline">Close</button>
-                        <button o  className="btn btn-outline" >Submit</button>
+                        <button o className="btn btn-outline" >Submit</button>
                     </form>
+                    <div className='flex gap-5'>
+                        <iframe width="70%" height="600" className='flex rounded-lg' src={`http://localhost:5000/${file}`}></iframe>
+                        <div className='flex flex-col gap-5'>
+                        <select onChange={handle} className="select select-success w-full max-w-xs bg-slate-50">
+                            <option disabled selected>Submitted Students</option>
+
+                            {
+                                ans?.map((a) =>
+                                    <option value={a.fileName} onClick={() => { console.log("HK click: ", a); alert("HK"); setFile(a) }}>{a.authorName}</option>
+                                )
+                            }
+
+
+                        </select>
+                        <form>
+                            <label className="bg-slate-50 input input-bordered flex items-center gap-2">
+                                Points
+                                <input type="text" className="grow bg-opacity-0 rounded" placeholder="point" />
+                                <button>submit</button>
+                            </label>
+                        </form>
+                        </div>
+
+                        
+                    </div>
+
+
                 </div>
             </div>
-            
+
         </dialog>
     )
 }

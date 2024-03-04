@@ -17,7 +17,8 @@ const StMain = () => {
 
 	return (
 		<div>
-			{userLoading && <div className='p-5 min-w-screen min-h-screen rounded-lg bg-white'>
+			{userLoading ?
+				<Load></Load> :<div className='p-5 min-w-screen min-h-screen rounded-lg bg-white'>
 				<TcNavbar></TcNavbar>
 				<div className='flex gap-5'>
 					<div className='w-2/12'><StLeftSideBar></StLeftSideBar></div>
