@@ -74,9 +74,9 @@ export const Assignment = ({ asgnmnt }) => {
 
 const Submission = ({ ans }) => {
 
-
-    console.log("HK ans: ", ans)
+    const [l, setL] = useState(false)
     const [file, setFile] = useState(null)
+    const [id, setId] = useState(null)
     const [data, setData] = useState({})
 
     const [selectedValue, setSelectedValue] = useState('option1');
@@ -85,19 +85,31 @@ const Submission = ({ ans }) => {
         setSelectedValue(event.target.value);
     };
 
-    const handle = (event) => {
-        const d = (event.target.selectedOptions[0].value).replace('\\', '/')
-        setFile(d)
-        console.log("HK: ", d)
-        console.log("HK file is: ", event.target.selectedOptions[0].value)
+    const handle = (event) => { 
+        const k = event.target.selectedOptions[0]
+        setId(k.dataset.value);
+        const d = (k.value).replace('\\', '/')
+        setFile(d) 
     }
 
-    // const file =  fetch('http://localhost:5000/files/1708983154899NSTKYP.pdf',
-    // {
-    //     method: 'GET'
-    // })
-    // .then(res => {res.json();console.log("HK response: ", res)})
-    // .then(data => { console.log("HK: ", data, " for: ")})
+    const submit = (event) => {
+        event.preventDefault(); 
+        setL(true)
+        const form = event.target;
+        const points = form.points.value; 
+
+        const file =  fetch('http://localhost:5000/provideAssignmentsPoints',
+        {
+            method: 'POST',
+            body: JSON.stringify({id, points}),
+            headers: { 'Content-Type': 'application/json' },
+        },
+        )
+        .then(res => res.json())
+        .then(data => { console.log("HK: ", data, " for: "); setL(false)})
+
+    }
+
 
 
     return (
@@ -108,32 +120,32 @@ const Submission = ({ ans }) => {
                     <form method="dialog" className='w-full flex justify-between'>
                         {/* if there is a button in form, it will close the modal */}
                         <button className="btn btn-outline">Close</button>
-                        <button o className="btn btn-outline" >Submit</button>
+                        <button className="btn btn-outline" >Submit</button>
                     </form>
                     <div className='flex gap-5'>
                         <iframe width="70%" height="600" className='flex rounded-lg' src={`http://localhost:5000/${file}`}></iframe>
                         <div className='flex flex-col gap-5'>
-                        <select onChange={handle} className="select select-success w-full max-w-xs bg-slate-50">
-                            <option disabled selected>Submitted Students</option>
+                            <select onChange={handle} className="select select-success w-full max-w-xs bg-slate-50">
+                                <option disabled selected>Submitted Students</option>
 
-                            {
-                                ans?.map((a) =>
-                                    <option value={a.fileName} onClick={() => { console.log("HK click: ", a); alert("HK"); setFile(a) }}>{a.authorName}</option>
-                                )
-                            }
+                                {
+                                    ans?.map((a) =>
+                                    <option data-value={a._id}  value={a.fileName} >{a.authorName}</option>
+                                    )
+                                }
 
 
-                        </select>
-                        <form>
-                            <label className="bg-slate-50 input input-bordered flex items-center gap-2">
-                                Points
-                                <input type="text" className="grow bg-opacity-0 rounded" placeholder="point" />
-                                <button>submit</button>
-                            </label>
-                        </form>
+                            </select>
+                            <form onSubmit={submit}>
+                                <label className="bg-slate-50 input input-bordered flex items-center gap-2">
+                                    Points
+                                    <input name='points' type="text" className="grow bg-opacity-0 rounded" placeholder="point" />
+                                    <button disabled={!file} type='submit'>{l?<span className="loading loading-spinner loading-lg"></span>:'Submit'}</button>
+                                </label>
+                            </form>
                         </div>
 
-                        
+
                     </div>
 
 
