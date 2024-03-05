@@ -18,6 +18,7 @@ import StMain from "./Pages/Student/StMain";
 import StHome from "./Pages/Student/StHome";
 import StClassroom from "./Pages/Student/StClassroom";
 import StClassroomPage from "./Pages/Student/StClassroomPage";
+import AiQuiz from "./Pages/Chat/AiQuiz";
 
 
 export const router = createBrowserRouter([
@@ -103,6 +104,10 @@ export const router = createBrowserRouter([
             {
                 path: '/ask/pdf',
                 element: <PDFChat></PDFChat>
+            },
+            {
+                path: '/ask/generateQuiz',
+                element: <AiQuiz></AiQuiz>
             }
         ]
     }

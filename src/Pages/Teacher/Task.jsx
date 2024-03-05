@@ -40,6 +40,7 @@ const Task = ({ classID }) => {
                 <div tabIndex={0} role="button" className="btn btn-outline m-1">CREATE<IoMdAddCircleOutline className='text-xl' /></div>
                 <ul tabIndex={0} className="border dropdown-content  z-[1] menu p-2 shadow bg-blue-200 focus:bg-slate-50 text-slate-950 rounded-box w-52">
                     <li><button className="" onClick={() => document.getElementById('quiz').showModal()}>Create Quiz</button></li>
+                    <li><button className="" onClick={() => document.getElementById('quiz').showModal()}>Create Quiz (Automatic)</button></li>
                     <li><button className="" onClick={() => document.getElementById('assignment').showModal()}>Make Assignment</button></li>
                 </ul>
             </div>
@@ -263,6 +264,122 @@ const Question = () => {
                 <button onClick={addOption} type='button' className='px-2 border'>add option</button>
             </div>
         </div>
+    )
+}
+
+
+
+const createAutomaticQuiz = ({ clsID, setUpdated, update }) => {
+    const [loading, setLoading] = useState(false)
+    const {ref} = useRef();
+
+    const [questions, setQuestions] = useState([])
+    const addQuestion = (event) => {
+        setQuestions([...questions, Question()])
+        console.log(event.target.parentNode.parentNode.children[1])
+    }
+    const formEvent = (event) => {
+        event.preventDefault();
+    }
+    const submit = (event) => {
+        event.preventDefault()
+        // setLoading(true)
+        const classID = clsID
+        const quizTitle = event.target.parentNode.parentNode.parentNode.children[0].children[0].children[0].children[0].value
+        const quizDescription = event.target.parentNode.parentNode.parentNode.children[0].children[0].children[1].children[0].value
+
+        const questionLength = event.target.parentNode.parentNode.parentNode.children[0].children[1].children.length
+        const questions = []
+        for (let i = 0; i < questionLength; i++) {
+            const questionTitle = event.target.parentNode.parentNode.parentNode.children[0].children[1].children[i].children[0].children[0].children[0].children[0].value
+            const questionType = event.target.parentNode.parentNode.parentNode.children[0].children[1].children[i].children[0].children[0].children[1].value
+            const optionsLength = event.target.parentNode.parentNode.parentNode.children[0].children[1].children[i].children[1].children[0].children.length
+            const options = []
+            const answer = [];
+            for (let j = 0; j < optionsLength; j++) {
+                const op = event.target.parentNode.parentNode.parentNode.children[0].children[1].children[i].children[1].children[0].children[j];
+                options.push(op.children[1].value.toString())
+                if (op.children[0].checked) answer.push(op.children[1].value.toString());
+
+            }
+            questions.push({ questionTitle, questionType, options, answer })
+        }
+        const createTime = getCurrentTime(new Date())
+
+        // const Deadline = []
+        const slctdDeadline = event.target.parentNode.parentNode.parentNode.children[0].children[0].children[2].children[0].value
+        const Deadline = getCurrentTime(new Date(slctdDeadline));
+        // const ddHours = selectedDate.getHours();
+        // const ddMinutes = selectedDate.getMinutes();
+        // const ddSeconds = selectedDate.getSeconds();
+        // const ddDate = selectedDate.getDate();
+        // const ddMonth = selectedDate.getMonth(); // Months are zero-indexed
+        // const ddYear = selectedDate.getFullYear();
+        // Deadline.push(ddHours, ddMinutes, ddSeconds, ddDate, ddMonth, ddYear)
+
+
+        // Log or use the formatted time
+
+
+        const value = { classID, quizTitle, quizDescription, questions, createTime, Deadline }
+
+
+        fetch('http://localhost:5000/createQuestions', {
+            method: 'POST',
+            body: JSON.stringify(value),
+            headers: { 'Content-Type': 'application/json' },
+        })
+            .then(res => res.json())
+            .then(data => {
+                {
+                    console.log("HK response data: ", data)
+                    window.quiz.close()
+                    setLoading(false)
+                    setUpdated(!update)
+                }
+            })
+            .catch((error) => console.log("Error:", error));
+
+    }
+    return (
+        <dialog id="automatedQuiz" className="modal modal-bottom sm:modal-middle bg-slate-50">
+            <div className="modal-box bg-slate-50 gap-3">
+                <form onSubmit={formEvent} ref={ref}>
+                    <div className='border p-5 rounded-lg bg-slate-400 bg-opacity-20'>
+                        <div className="relative z-0">
+                            <input type="text" id="default_standard" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer font-bold" placeholder=" " />
+                            <label name="title" for="default_standard" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-bold">Quiz Title</label>
+                        </div>
+                        <div className="relative z-0 my-5 p-2">
+                            <textarea type="text" id="default_standard" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                            <label for="default_standard" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-bold">Quiz Description</label>
+                        </div>
+                        <div className="relative z-0 my-5 p-2">
+                            {/* <label for="birthdaytime">Birthday (date and time):</label> */}
+                            <input type="datetime-local" id="birthdaytime" name="birthdaytime" className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer' />
+                            {/* <textarea type="text" id="default_standard" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " /> */}
+                            <label for="birthdaytime" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-bold">Deadline (date and time):</label>
+                        </div>
+                    </div>
+
+
+                    <div name={"questions"} >
+                        {questions}
+                    </div>
+
+                    <div>
+                        <button onClick={addQuestion} type='button' className='btn btn-outline'>Add question.</button>
+                    </div>
+                </form>
+                <div className="modal-action">
+                    <form method="dialog" className='w-full flex justify-between'>
+                        {/* if there is a button in form, it will close the modal */}
+                        <button className="btn btn-outline">Close</button>
+                        <button onClick={submit} className="btn btn-outline" disabled={loading}>{loading ? <span className="loading loading-spinner text-info"></span> : "Submit"}</button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
     )
 }
 

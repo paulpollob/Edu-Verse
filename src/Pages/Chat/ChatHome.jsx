@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import chatvdo from '../../assets/images/chatvdo.png'
 import chatpdf from '../../assets/images/chatpdf.png'
 import gchat from '../../assets/images/gchat.png'
+import aiQuiz from '../../assets/images/aiQuiz.png'
 
 const ChatHome = () => {
     const [loading, setLoading] = useState(false);
@@ -37,6 +38,15 @@ const ChatHome = () => {
                 </figure>
                 <div className="card-body items-center text-center">
                     <h2 className="card-title">general Q&A!</h2>
+                </div>
+            </Link>
+
+            <Link to={'/ask/generateQuiz'} className="card w-56 bg-white shadow-xl">
+                <figure className="">
+                    <img src={aiQuiz} alt="youtube" className="rounded-xl" />
+                </figure>
+                <div className="card-body items-center text-center">
+                    <h2 className="card-title">Genarate Quiz</h2>
                 </div>
             </Link>
 
