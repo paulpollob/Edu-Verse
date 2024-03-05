@@ -10,8 +10,7 @@ const Task = ({ classID }) => {
     const [update, setUpdated] = useState(false)
     const [assignemnts, setAssignments] = useState([])
     const [updt, setUpdt] = useState(false)
-    useEffect(() => {
-        console.log("HK id: ", classID)
+    useEffect(() => { 
         fetch('http://localhost:5000/getQuiz',
             {
                 method: 'POST',
@@ -22,8 +21,7 @@ const Task = ({ classID }) => {
             .then(data => setTasks(data))
     }, [update])
 
-    useEffect(() => {
-        console.log("HK id: ", classID)
+    useEffect(() => { 
         fetch('http://localhost:5000/getQuiz',
             {
                 method: 'POST',

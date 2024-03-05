@@ -10,8 +10,8 @@ import Load from '../../Load';
 
 const TeacherMain = () => {
 
-    const { userLoading } = useContext(Context)
-    // setTeacherID("LsTJNrf5KPgKXAPZ7ckHLpNMKGa2")
+    const { userLoading } = useContext(Context) 
+    
 
     return (
 // <<<<<<< HEAD
