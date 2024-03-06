@@ -4,8 +4,7 @@ import { Context } from '../../Context/EduContext';
 import Load from '../../Load';
 
 const PrivateRoute = ({children}) => {
-    // return 
-    console.log("HK called")
+    // return  
 
     const { user,userLoading } = useContext(Context);
     
@@ -15,19 +14,16 @@ const PrivateRoute = ({children}) => {
         
     if(!(user.email==null) && location.pathname.includes('classroom/home') && !(location.state==null)) { console.log("HK from clas");return children}
     if(user.occupation == "Teacher") 
-    {
-        console.log("HK")
+    { 
         if(location.pathname.includes('tc')) return children
         else return <Navigate to={'/tc'} ></Navigate> 
     }
     if(user.occupation == "Student" )
-    {
-        console.log("HKst")
+    { 
 
         if(location.pathname.includes('st')) return children
         else return <Navigate to={'/st'} ></Navigate> 
-    }
-    console.log("HK6")
+    } 
     return (
         <div>
             {

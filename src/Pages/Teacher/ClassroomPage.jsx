@@ -16,10 +16,27 @@ const ClassroomPage = (props) => {
     const [page, setPage] = useState(1);
     const location = useLocation();
     const [classInfo, setClassInfo] = useState(null)
-    // const location = props 
+    const [aiQuestions, setAiQuestions] = useState(null) 
 
     const classID = location.state;
 
+
+    useEffect(()=>{
+        fetch('http://localhost:5000/AiQuestionGet', {
+        method: 'POST',
+        body: JSON.stringify({classID}),
+        headers: { 'Content-Type': 'application/json' },
+    })
+        .then(res => res.json())
+        .then(data => { 
+            setAiQuestions(data.response)
+        })
+        .catch((er) => {
+            console.log("HK: ", er);
+            setL(false)
+        })
+
+    }, [])
 
     useEffect(() => {
         fetch('http://localhost:5000/getClassInfo',
@@ -29,7 +46,7 @@ const ClassroomPage = (props) => {
                 headers: { 'Content-Type': 'application/json' },
             })
             .then(res => res.json())
-            .then(data => { console.log("HK class info: ", data); setClassInfo(data) })
+            .then(data => { setClassInfo(data) })
     }, [])
 
 
@@ -39,7 +56,7 @@ const ClassroomPage = (props) => {
             <div className='h-5/6'>
                 {/* {"class id: " + location.state} */}
                 {(page == 1) && <Annoucement classInfo={classInfo} classID={location.state}  ></Annoucement>}
-                {(page == 2) && <Task classID={location.state}></Task>}
+                {(page == 2) && <Task aiQuestions={aiQuestions} classID={location.state}></Task>}
                 {(page == 3) && <People></People>}
             </div>
         </div>

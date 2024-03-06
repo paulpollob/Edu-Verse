@@ -5,7 +5,8 @@ import Quiz, { Assignment } from './components/Quiz';
 import { Context } from '../../Context/EduContext';
 
 
-const Task = ({ classID }) => {
+const Task = ({ classID, aiQuestions }) => {
+    console.log("HK q ", aiQuestions)
     const [tasks, setTasks] = useState([])
     const [update, setUpdated] = useState(false)
     const [assignemnts, setAssignments] = useState([])
@@ -38,7 +39,7 @@ const Task = ({ classID }) => {
                 <div tabIndex={0} role="button" className="btn btn-outline m-1">CREATE<IoMdAddCircleOutline className='text-xl' /></div>
                 <ul tabIndex={0} className="border dropdown-content  z-[1] menu p-2 shadow bg-blue-200 focus:bg-slate-50 text-slate-950 rounded-box w-52">
                     <li><button className="" onClick={() => document.getElementById('quiz').showModal()}>Create Quiz</button></li>
-                    <li><button className="" onClick={() => document.getElementById('quiz').showModal()}>Create Quiz (Automatic)</button></li>
+                    <li><button className="" onClick={() => document.getElementById('automatedQuiz').showModal()}>Create Quiz (Automatic)</button></li>
                     <li><button className="" onClick={() => document.getElementById('assignment').showModal()}>Make Assignment</button></li>
                 </ul>
             </div>
@@ -78,6 +79,7 @@ const Task = ({ classID }) => {
 
 
             <Modal clsID={classID} setUpdated={setUpdated} update={update}></Modal>
+            <CreateAutomaticQuiz aiQuestions={aiQuestions}></CreateAutomaticQuiz>
             <CreateAssignment classID={classID} setUpdt={setUpdt} updt={updt} ></CreateAssignment>
         </div>
     );
@@ -110,7 +112,7 @@ const Modal = ({ clsID, setUpdated, update }) => {
     }
     const submit = (event) => {
         event.preventDefault()
-        // setLoading(true)
+        setLoading(true)
         const classID = clsID
         const quizTitle = event.target.parentNode.parentNode.parentNode.children[0].children[0].children[0].children[0].value
         const quizDescription = event.target.parentNode.parentNode.parentNode.children[0].children[0].children[1].children[0].value
@@ -133,20 +135,9 @@ const Modal = ({ clsID, setUpdated, update }) => {
         }
         const createTime = getCurrentTime(new Date())
 
-        // const Deadline = []
         const slctdDeadline = event.target.parentNode.parentNode.parentNode.children[0].children[0].children[2].children[0].value
         const Deadline = getCurrentTime(new Date(slctdDeadline));
-        // const ddHours = selectedDate.getHours();
-        // const ddMinutes = selectedDate.getMinutes();
-        // const ddSeconds = selectedDate.getSeconds();
-        // const ddDate = selectedDate.getDate();
-        // const ddMonth = selectedDate.getMonth(); // Months are zero-indexed
-        // const ddYear = selectedDate.getFullYear();
-        // Deadline.push(ddHours, ddMinutes, ddSeconds, ddDate, ddMonth, ddYear)
-
-
-        // Log or use the formatted time
-
+ 
 
         const value = { classID, quizTitle, quizDescription, questions, createTime, Deadline }
 
@@ -182,9 +173,7 @@ const Modal = ({ clsID, setUpdated, update }) => {
                             <label for="default_standard" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-bold">Quiz Description</label>
                         </div>
                         <div className="relative z-0 my-5 p-2">
-                            {/* <label for="birthdaytime">Birthday (date and time):</label> */}
                             <input type="datetime-local" id="birthdaytime" name="birthdaytime" className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer' />
-                            {/* <textarea type="text" id="default_standard" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " /> */}
                             <label for="birthdaytime" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-bold">Deadline (date and time):</label>
                         </div>
                     </div>
@@ -267,9 +256,85 @@ const Question = () => {
 
 
 
-const createAutomaticQuiz = ({ clsID, setUpdated, update }) => {
+const AIQuestion = ({data}) => {
+ 
+
+
+
+    const addOption = (event) => {
+        const value = event.target.parentNode.parentNode.children[0].children[0].children[1].value
+        const optn = document.createElement("label");
+        optn.classList.add("flex", "gap-2")
+        const inpt = document.createElement("input")
+        const inpt2 = document.createElement("input")
+        inpt2.classList.add("rounded", "border-0", "border-b", "bg-slate-50", "p-0", "px-2")
+        inpt2.placeholder = "Option..."
+        inpt2.type = "text"
+
+        if (value == "Mupltiple Choice") {
+            inpt.classList.add("radio", "radio-info")
+            inpt.name = "options"
+            inpt.type = "radio"
+        }
+        else {
+            inpt.classList.add("checkbox", "checkbox-sm")
+            inpt.type = "checkbox"
+        }
+        optn.append(inpt, inpt2)
+        event.target.parentNode.children[0].appendChild(optn)
+
+    }
+
+    const slct = (event) => {
+        event.target.parentNode.parentNode.parentNode.children[1].children[0].innerHTML = ""
+    }
+    return (
+        <div className='border rounded-lg my-3 p-5 bg-slate-400 bg-opacity-20'>
+            <div>
+                <div className='flex justify-between shadow-xl'>
+                    <div className="rounded-lg relative z-0">
+                        <input name='questionTitle' type="text" id="default_standard" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer font-bold" defaultValue={data.mcq} placeholder=" " />
+                        <label for="default_standard" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-bold">Question Title</label>
+                    </div>
+                    <select name='questionType' onChange={slct} className="select select-info  max-w-xs bg-slate-50">
+                        <option selected>Mupltiple Choice</option>
+                        <option>CheckBox</option>
+                    </select>
+                </div>
+            </div>
+            <div className="relative z-0 my-5 flex flex-col gap-3 items-start">
+                <div id='options' name={'options'+data?.no} className='flex flex-col gap-3 items-start'>
+                    {/* options heref */}
+                    <label className='flex gap-2'>
+                        <input defaultChecked={(data.correct=='a')} name={'options'+data?.no} type='radio' className='radio radio-info' />
+                        <input type='text' className='rounded border-0 border-b bg-slate-50 p-0 px-2' defaultValue={data?.options?.a} placeholder = "Option..."/>
+                    </label>
+                    <label className='flex gap-2'>
+                        <input defaultChecked={(data?.correct=='b')} name={'options'+data?.no} type='radio' className='radio radio-info' />
+                        <input type='text' className='rounded border-0 border-b bg-slate-50 p-0 px-2' defaultValue={data?.options?.b} placeholder = "Option..."/>
+                    </label>
+                    <label className='flex gap-2'>
+                        <input defaultChecked={(data?.correct=='c')} name={'options'+data?.no} type='radio' className='radio radio-info' />
+                        <input type='text' className='rounded border-0 border-b bg-slate-50 p-0 px-2' defaultValue={data?.options?.c} placeholder = "Option..."/>
+                    </label>
+                    <label className='flex gap-2'>
+                        <input defaultChecked={(data?.correct=='d')} name={'options'+data?.no} type='radio' className='radio radio-info' />
+                        <input type='text' className='rounded border-0 border-b bg-slate-50 p-0 px-2' defaultValue={data?.options?.d} placeholder = "Option..."/>
+                    </label>
+                </div>
+                <button onClick={addOption} type='button' className='px-2 border'>add option</button>
+            </div>
+        </div>
+    )
+}
+
+
+
+
+const CreateAutomaticQuiz = ({ clsID, setUpdated, update, aiQuestions }) => {
     const [loading, setLoading] = useState(false)
-    const {ref} = useRef();
+    const ref = useRef();
+    const [ slctdDta, setSlctdDta] = useState(null)
 
     const [questions, setQuestions] = useState([])
     const addQuestion = (event) => {
@@ -281,17 +346,18 @@ const createAutomaticQuiz = ({ clsID, setUpdated, update }) => {
     }
     const submit = (event) => {
         event.preventDefault()
-        // setLoading(true)
+        setLoading(true)
         const classID = clsID
-        const quizTitle = event.target.parentNode.parentNode.parentNode.children[0].children[0].children[0].children[0].value
-        const quizDescription = event.target.parentNode.parentNode.parentNode.children[0].children[0].children[1].children[0].value
+        const form = ref.current
+        const quizTitle = form.title
+        const quizDescription = form.description
 
         const questionLength = event.target.parentNode.parentNode.parentNode.children[0].children[1].children.length
         const questions = []
         for (let i = 0; i < questionLength; i++) {
-            const questionTitle = event.target.parentNode.parentNode.parentNode.children[0].children[1].children[i].children[0].children[0].children[0].children[0].value
-            const questionType = event.target.parentNode.parentNode.parentNode.children[0].children[1].children[i].children[0].children[0].children[1].value
-            const optionsLength = event.target.parentNode.parentNode.parentNode.children[0].children[1].children[i].children[1].children[0].children.length
+            const questionTitle = form.questionTitle
+            const questionType = form.questionType
+            const optionsLength = form.options.children.length
             const options = []
             const answer = [];
             for (let j = 0; j < optionsLength; j++) {
@@ -304,19 +370,11 @@ const createAutomaticQuiz = ({ clsID, setUpdated, update }) => {
         }
         const createTime = getCurrentTime(new Date())
 
-        // const Deadline = []
+ 
         const slctdDeadline = event.target.parentNode.parentNode.parentNode.children[0].children[0].children[2].children[0].value
         const Deadline = getCurrentTime(new Date(slctdDeadline));
-        // const ddHours = selectedDate.getHours();
-        // const ddMinutes = selectedDate.getMinutes();
-        // const ddSeconds = selectedDate.getSeconds();
-        // const ddDate = selectedDate.getDate();
-        // const ddMonth = selectedDate.getMonth(); // Months are zero-indexed
-        // const ddYear = selectedDate.getFullYear();
-        // Deadline.push(ddHours, ddMinutes, ddSeconds, ddDate, ddMonth, ddYear)
-
-
-        // Log or use the formatted time
+ 
+ 
 
 
         const value = { classID, quizTitle, quizDescription, questions, createTime, Deadline }
@@ -329,8 +387,7 @@ const createAutomaticQuiz = ({ clsID, setUpdated, update }) => {
         })
             .then(res => res.json())
             .then(data => {
-                {
-                    console.log("HK response data: ", data)
+                { 
                     window.quiz.close()
                     setLoading(false)
                     setUpdated(!update)
@@ -339,29 +396,56 @@ const createAutomaticQuiz = ({ clsID, setUpdated, update }) => {
             .catch((error) => console.log("Error:", error));
 
     }
+
+
+
+    const slctQ = (event) =>
+    {
+        const id = event.target.selectedOptions[0].value
+        const data = aiQuestions.find((qn)=>qn._id==id)
+        console.log("HK seleccted : ", data)
+        setSlctdDta(data)
+    }
+
+
     return (
         <dialog id="automatedQuiz" className="modal modal-bottom sm:modal-middle bg-slate-50">
             <div className="modal-box bg-slate-50 gap-3">
-                <form onSubmit={formEvent} ref={ref}>
+                <form onSubmit={formEvent} ref={ref} className='flex flex-col gap-3'>
                     <div className='border p-5 rounded-lg bg-slate-400 bg-opacity-20'>
                         <div className="relative z-0">
-                            <input type="text" id="default_standard" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer font-bold" placeholder=" " />
-                            <label name="title" for="default_standard" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-bold">Quiz Title</label>
+                            <input name='title' type="text" id="default_standard" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer font-bold" placeholder=" " />
+                            <label for="default_standard" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-bold">Quiz Title</label>
                         </div>
                         <div className="relative z-0 my-5 p-2">
-                            <textarea type="text" id="default_standard" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                            <textarea name='description' type="text" id="default_standard" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
                             <label for="default_standard" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-bold">Quiz Description</label>
                         </div>
                         <div className="relative z-0 my-5 p-2">
-                            {/* <label for="birthdaytime">Birthday (date and time):</label> */}
-                            <input type="datetime-local" id="birthdaytime" name="birthdaytime" className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer' />
-                            {/* <textarea type="text" id="default_standard" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " /> */}
-                            <label for="birthdaytime" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-bold">Deadline (date and time):</label>
+                            <input type="datetime-local" id="deadline" name="deadline" className='block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer' />
+                            <label for="deadline" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-bold">Deadline (date and time):</label>
                         </div>
+                    </div>
+
+                    <div className='border p-5 rounded-lg bg-slate-400 bg-opacity-20'>
+                    <select onChange={slctQ} className="rounded-md" name="tone" id="tone">
+                            <option disabled selected value="volvo">Select Questions</option>
+
+                            {
+                                aiQuestions.map((q)=>
+                                    <option value={q._id} >{q.topicName}</option>
+                                )
+                            } 
+                        </select>
                     </div>
 
 
                     <div name={"questions"} >
+                        {
+                            slctdDta?.selected.map((qn)=>
+                                <AIQuestion key={qn.no} data = {qn} />
+                            )
+                        }
                         {questions}
                     </div>
 

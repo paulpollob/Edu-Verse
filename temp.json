@@ -1,0 +1,38 @@
+{
+    "value": [
+    
+        {
+            "id": "1",
+            "mcq": "multiple choice questions",
+            "options": [
+                "choice here",
+                "choice here",
+                "choice here",
+                "choice here"
+            ],
+            "correct": "correct answer"
+        },
+        {
+            "id": "2",
+            "mcq": "multiple choice questions",
+            "options": [
+                "choice here",
+                "choice here",
+                "choice here",
+                "choice here"
+            ],
+            "correct": "correct answer"
+        },
+        {
+            "id": "",
+            "mcq": "multiple choice questions",
+            "options": [
+                "choice here",
+                "choice here",
+                "choice here",
+                "choice here"
+            ],
+            "correct": "correct answer"
+        }
+    ]
+}

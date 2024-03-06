@@ -59,7 +59,6 @@ const MakePost = ({ userID, userName, userImg, classID, updated, setUpdated }) =
         const msg = form.annoucementText.value
         const value = { "teacherID":userID, userName, userImg, msg, classID, time }
 
-        console.log("HK data: ", value)
 
         fetch('http://localhost:5000/makePost', {
             method: 'POST',
@@ -85,8 +84,7 @@ const MakePost = ({ userID, userName, userImg, classID, updated, setUpdated }) =
 }
 
 const Post = ({ _id, msg, time, userID, userName, userImg, comment, updated, setUpdated }) => {
-    const { day, month, year } = time;
-    console.log("HK my cmnt is: ", comment)
+    const { day, month, year } = time; 
     
         const { user } = useContext(Context);
 
