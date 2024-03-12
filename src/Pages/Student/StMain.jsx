@@ -22,7 +22,7 @@ const StMain = () => {
 				<TcNavbar></TcNavbar>
 				<div className='flex gap-5'>
 					<div className='w-2/12'><StLeftSideBar></StLeftSideBar></div>
-					<div className='bg-teal-200 rounded-xl w-10/12 p-10 h-[36rem]'><Outlet></Outlet></div>
+					<div className='bg-slate-100 rounded-xl w-10/12 p-10 h-[36rem]'><Outlet></Outlet></div>
 					{/* <div className='w-2/12'><StRightSideBar></StRightSideBar></div> */}
 				</div>
 			</div>}

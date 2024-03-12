@@ -22,13 +22,15 @@ const PDFChat = () => {
         const input = event.target.input
         let file = input.files[0];
         if (file != undefined && file.type == "application/pdf") {
-            let fr = new FileReader(); // Create a new FileReader object
-            fr.readAsDataURL(file); // Read the file as data URL
-            fr.onload = () => {
-                let res = fr.result; // Get the result of file reading
-                extractText(res, false, event); // Extract text without password 
+            // let fr = new FileReader(); // Create a new FileReader object
+            // fr.readAsDataURL(file); // Read the file as data URL
+            // fr.onload = () => {
+            //     let res = fr.result; // Get the result of file reading
+            //     extractText(res, false, event); // Extract text without password 
 
-            }
+            // }
+            // alert("HK")
+            afterProcess(file)
         } else {
             alert("Select a valid PDF file");
             setUplding(false);
@@ -40,36 +42,59 @@ const PDFChat = () => {
         setConnected(false);
     }
 
-    let alltext = [];
+    // let alltext = [];
 
-    async function extractText(url, pass, event) {
+    // async function extractText(url, pass, event) {
+    //     try {
+    //         const pdf = await pdfjsLib.getDocument(url).promise; // Get the PDF document without password
+    //         let pages = pdf.numPages;
+    //         for (let i = 1; i <= pages; i++) {
+    //             let page = await pdf.getPage(i); // Get the page object for each page
+    //             let txt = await page.getTextContent(); // Get the text content of the page
+    //             let text = txt.items.map((s) => s.str).join(""); // Concatenate the text items into a single string
+    //             alltext.push(text); // Add the extracted text to the array
+    //         }
+
+    //         afterProcess(event);
+    //     }
+    //     catch (err) {
+    //         alert(err.message);
+    //     }
+    // }
+
+    const afterProcess = async (file) => {
+        // const answer = event.target.parentNode.children[1]
+
+        // let txt = "";
+
+        // alltext.map((e, i) => {
+        //     txt += alltext[i] + ` `; // Add options for each page in the page selection dropdown
+        // });
+        // setText(txt);
+        // setFlg(flg + 1);
+        const url = 'https://pdf-to-text-converter.p.rapidapi.com/api/pdf-to-text/convert';
+        const data = new FormData();
+        data.append('file', file);
+        data.append('page', '1');
+        const options = {
+            method: 'POST',
+            headers: {
+                'X-RapidAPI-Key': '4316d255c0msh10b17f4968dbd30p1fc510jsn3ec5d0970a67',
+                'X-RapidAPI-Host': 'pdf-to-text-converter.p.rapidapi.com'
+            },
+            body: data
+        };
+
         try {
-            const pdf = await pdfjsLib.getDocument(url).promise; // Get the PDF document without password
-            let pages = pdf.numPages;
-            for (let i = 1; i <= pages; i++) {
-                let page = await pdf.getPage(i); // Get the page object for each page
-                let txt = await page.getTextContent(); // Get the text content of the page
-                let text = txt.items.map((s) => s.str).join(""); // Concatenate the text items into a single string
-                alltext.push(text); // Add the extracted text to the array
-            }
+            const response = await fetch(url, options);
+            const result = await response.text(); 
+            setText(result)
 
-            afterProcess(event);
+            setFlg(flg + 1);
+            console.log("HK: result: ", txt);
+        } catch (error) {
+            console.error(error);
         }
-        catch (err) {
-            alert(err.message);
-        }
-    }
-
-    function afterProcess(event) {
-        const answer = event.target.parentNode.children[1]
-
-        let txt = "";
-
-        alltext.map((e, i) => {
-            txt += alltext[i] + ` `; // Add options for each page in the page selection dropdown
-        });
-        setText(txt);
-        setFlg(flg + 1);
 
     }
 
@@ -81,20 +106,20 @@ const PDFChat = () => {
                 body: JSON.stringify({ "usertext": txt })
             })
                 .then(res => res.json())
-                .then((data) => { 
-                    if (data.error){
+                .then((data) => {
+                    if (data.error) {
                         alert("Server Error:", data.error);
-                        setUplding(false); 
+                        setUplding(false);
                         return;
                     }
-                    setConnected(data.success); 
+                    setConnected(data.success);
                     setUplding(false);
                 })
-                .catch((error) => {alert("Server Error:", error); setUplding(false);});
+                .catch((error) => { alert("Server Error:", error); setUplding(false); });
         }
         if (flg != 0) load();
 
-    }, [flg])
+    }, [txt])
 
     return (
         <div className='relative h-full'>
@@ -126,7 +151,7 @@ const PDFChat = () => {
 
 
 
-const Chat = ({msges, setMsges}) => {
+const Chat = ({ msges, setMsges }) => {
 
 
 
@@ -138,7 +163,7 @@ const Chat = ({msges, setMsges}) => {
         const msg = event.target.msg;
         setMsges([...msges, { "type": "question", "details": msg.value }])
         msg.value = ""
-        setFlg(flg+1);
+        setFlg(flg + 1);
     }
     useEffect(() => {
 
@@ -150,13 +175,14 @@ const Chat = ({msges, setMsges}) => {
             })
                 .then(res => res.json())
                 .then((data) => {
-                    if (data.error){
+                    if (data.error) {
                         alert("Server Error:", data.error);
-                        setLoading(false); 
+                        setLoading(false);
                         return;
                     }
-                    setMsges([...msges, { 'type': 'answer', 'details': data.output_text }]); setLoading(false) })
-                .catch((error) => {alert("Server Error:", error); setLoading(false);});
+                    setMsges([...msges, { 'type': 'answer', 'details': data.output_text }]); setLoading(false)
+                })
+                .catch((error) => { alert("Server Error:", error); setLoading(false); });
         }
 
         if (flg != 0) msg();
@@ -191,7 +217,7 @@ const CreateMsg = ({ msges, loading }) => {
                                 <div className='rounded-lg text-white flex justify-end  text-justify bg-blue-500 text-balance max-w-lg    p-2'>
                                     {msg.details}
                                 </div>
-                                <img className='h-10 w-10 rounded-full' src='https://i.imgur.com/asLPUCK.jpg' />
+                                <img className='h-10 w-10 rounded-full' src='https://i.ibb.co/KzC49TW/good-Education.png' />
                             </div>
                         )
                     else if (msg.type == "answer")
@@ -215,7 +241,7 @@ const CreateMsg = ({ msges, loading }) => {
                 })
             }
             {
-               loading && <div className='w-full flex justify-start py-5 gap-3'>
+                loading && <div className='w-full flex justify-start py-5 gap-3'>
                     <img className='h-10 w-10 rounded-full' src={botlogo} alt='no img' />
 
                     <span className="loading loading-dots loading-md"></span>

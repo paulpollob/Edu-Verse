@@ -77,7 +77,7 @@ const From = ({ msges, loading }) => {
                                 <div className='rounded-lg text-white flex justify-end  text-justify bg-blue-500 text-balance max-w-lg    p-5'>
                                     {msg.details}
                                 </div>
-                                <img className='h-10 w-10 rounded-full' src='https://i.imgur.com/asLPUCK.jpg' />
+                                <img className='h-10 w-10 rounded-full' src='https://i.ibb.co/KzC49TW/good-Education.png' />
                             </div>
                         )
                     else if (msg.type == "answer")

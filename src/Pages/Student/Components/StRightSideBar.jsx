@@ -19,7 +19,7 @@ const Teacher = () => {
     return (
         <div className='flex flex-col items-center p-10 text-slate-600 font-bold bg-slate-50 rounded-xl'>
             <h1 className='py-5'>Your Teacher</h1>
-            <img className='shadow-2xl rounded-2xl w-20 h-20' src='https://i.imgur.com/asLPUCK.jpg' alt='not found'></img>
+            <img className='shadow-2xl rounded-2xl w-20 h-20' src='https://i.ibb.co/KzC49TW/good-Education.png' alt='not found'></img>
             <small>Terry Bator</small>
 
             <button className='mt-5 mb-3 bg-slate-200 hover:bg-slate-300 w-full py-2'>Profile</button>

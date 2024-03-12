@@ -5,8 +5,10 @@ import { GrTask } from "react-icons/gr";
 import { FaNewspaper } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
 import Annoucement from './Annoucement';
+import Attendence from './Attendence';
 import Task from './Task';
 import People from './People';
+import { MdCoPresent } from 'react-icons/md';
  
 
 
@@ -32,8 +34,7 @@ const ClassroomPage = (props) => {
             setAiQuestions(data.response)
         })
         .catch((er) => {
-            console.log("HK: ", er);
-            setL(false)
+            console.log("HK: ", er); 
         })
 
     }, [])
@@ -58,6 +59,7 @@ const ClassroomPage = (props) => {
                 {(page == 1) && <Annoucement classInfo={classInfo} classID={location.state}  ></Annoucement>}
                 {(page == 2) && <Task aiQuestions={aiQuestions} classID={location.state}></Task>}
                 {(page == 3) && <People></People>}
+                {(page == 4) && <Attendence></Attendence>}
             </div>
         </div>
     );
@@ -88,6 +90,12 @@ const Head = ({ setPage, classInfo }) => {
                     <div className='flex gap-3 items-center ms-3'>
                         <FaTasks />
                         <h1>Task</h1>
+                    </div>
+                </div>
+                <div className='cursor-pointer' onClick={() => setPage(4)} >
+                    <div className='flex gap-3 items-center ms-3'>
+                        <MdCoPresent />
+                        <h1>Attendence</h1>
                     </div>
                 </div>
             </div>
