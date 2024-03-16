@@ -116,7 +116,7 @@ const Post = ({ _id, msg, time, userID, comment, updated, setUpdated }) => {
     return (
         <div className='border rounded-lg flex flex-col bg-slate-50'>
             <div className=' m-3 p-2 flex gap-3 border-b'>
-                <img className='circle rounded-full h-12 w-12' src='https://i.imgur.com/asLPUCK.jpg' />
+                <img className='circle rounded-full h-12 w-12' src='https://i.ibb.co/KzC49TW/good-Education.png' />
                 <div className='flex flex-col justify-center'>
                     <h1>{"d"}</h1>
                     <small>{day}/{month}/{year}</small>

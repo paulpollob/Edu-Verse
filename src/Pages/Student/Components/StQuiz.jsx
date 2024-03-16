@@ -157,39 +157,68 @@ const dateToMilliseconds = ({ date }) => {
 
 
 
-export const Assignment = ({ asgnmnt, classID }) => {
-    console.log("HK time ", asgnmnt)
+export const Assignment = ({ asgnmnt, classID }) => { 
     const [clps, setClps] = useState(false)
     const { user } = useContext(Context);
     const [file, setFile] = useState(null);
+    const [txt, setText] = useState("");
+    const [flg, setFlg] = useState(0); 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
 
-    const submit = (event) => {
+    let jsondata;
+
+    const submit = async(event) => {
         event.preventDefault()
+        const url = 'https://pdf-to-text-converter.p.rapidapi.com/api/pdf-to-text/convert';
         const data = new FormData();
-        data.append("file", file)
-        data.append("classID", classID)
-        data.append("authorID", user._id)
-        data.append("assignmentID", asgnmnt._id)
-        data.append("authorName", user.name)
+        data.append('file', file);
+        data.append('page', '1');
+        const options = {
+            method: 'POST',
+            headers: {
+                'X-RapidAPI-Key': '4316d255c0msh10b17f4968dbd30p1fc510jsn3ec5d0970a67',
+                'X-RapidAPI-Host': 'pdf-to-text-converter.p.rapidapi.com'
+            },
+            body: data
+        };
+        
+        try {
+            const response = await fetch(url, options);
+            const result = await response.text();
+            jsondata = result;
+            console.log("HK: result: ", result);
+        } catch (error) {
+            console.error(error);
+        }
+ 
+        const dataS = new FormData();
+        dataS.append("file", file)
+        dataS.append("classID", classID)
+        dataS.append("authorID", user._id)
+        dataS.append("assignmentID", asgnmnt._id)
+        dataS.append("authorName", user.name)
+        dataS.append("jsonData", jsondata)
         fetch('http://localhost:5000/storeFile', {
             method: 'POST',
-            body: data,
+            body: dataS,
         })
             .then(res => res.json())
             .then(data => {
                 {
                     console.log("HK response data: ", data)
-                    alert("submitted!!!")
-                    // window.quiz.close()
-                    // setLoading(false)
-                    // setUpdated(!update)
+                    alert("submitted!!!") 
                 }
             })
             .catch((error) => {console.log("Error:", error);alert("Unsuccessfull!!!")});
     }
+
+
+ 
+
+
+
     return (
         <div>
             <div onClick={() => setClps(!clps)} className='shadow-md cursor-pointer border rounded-lg p-5 flex items-center gap-4'>

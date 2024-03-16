@@ -28,7 +28,7 @@ const Navbar = () => {
                 <RiMessage2Fill className='h-6 w-8' />
                 <MdNotifications className=' h-6 w-8' />
                 <div className='flex items-center gap-2'>
-                    <img title='Prokash Paul Pollob' src='https://i.imgur.com/asLPUCK.jpg' className='w-9 h-9 rounded-lg' />
+                    <img title='Prokash Paul Pollob' src='https://i.ibb.co/KzC49TW/good-Education.png' className='w-9 h-9 rounded-lg' />
                     <p title='Prokash Paul Pollob' className='600 font-bold'>Prokash Paul</p>
                 </div>
                 <FaChevronDown />

@@ -45,7 +45,7 @@ const StTask = ({ classID }) => {
 
                         {
                             tasks?.map((task, index) => {
-                                const d = user.quizRslt.find(obj => obj._id == task._id);
+                                const d = user.quizRslt?.find(obj => obj._id == task._id);
                                 return (
                                     <div key={index}>
                                         <div onClick={() => { setTsk(task); if (!d) document.getElementById('stquiz').showModal() }} disabled><StQuiz key={task._id} task={task} d={d}></StQuiz></div>

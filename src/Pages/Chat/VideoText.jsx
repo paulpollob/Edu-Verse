@@ -154,7 +154,7 @@ const Chat = ({msges, setMsges}) => {
 
             </div>
             <form onSubmit={send} className=' p-5 flex justify-between items-center gap-3 w-full'>
-                <img className='rounded-full h-10 w-10' src='https://i.imgur.com/asLPUCK.jpg'></img>
+                <img className='rounded-full h-10 w-10' src='https://i.ibb.co/KzC49TW/good-Education.png'></img>
                 <input name='msg' type='text' placeholder='Write Your Message...' className='border rounded-lg w-full' />
                 <button type='submit' className='focus:border-0 border-1 text-3xl'><IoSend /></button>
             </form>
@@ -173,7 +173,7 @@ const CreateMsg = ({ msges, loading }) => {
                                 <div className='rounded-lg text-white flex justify-end  text-justify bg-blue-500 text-balance max-w-lg    p-2'>
                                     {msg.details}
                                 </div>
-                                <img className='h-10 w-10 rounded-full' src='https://i.imgur.com/asLPUCK.jpg' />
+                                <img className='h-10 w-10 rounded-full' src='https://i.ibb.co/KzC49TW/good-Education.png' />
                             </div>
                         )
                     else if (msg.type == "answer")

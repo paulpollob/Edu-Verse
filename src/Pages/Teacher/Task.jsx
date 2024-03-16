@@ -79,7 +79,7 @@ const Task = ({ classID, aiQuestions }) => {
 
 
             <Modal clsID={classID} setUpdated={setUpdated} update={update}></Modal>
-            <CreateAutomaticQuiz aiQuestions={aiQuestions}></CreateAutomaticQuiz>
+            <CreateAutomaticQuiz clsID={classID} aiQuestions={aiQuestions} setUpdated={setUpdated} update={update}></CreateAutomaticQuiz>
             <CreateAssignment classID={classID} setUpdt={setUpdt} updt={updt} ></CreateAssignment>
         </div>
     );
@@ -104,7 +104,7 @@ const Modal = ({ clsID, setUpdated, update }) => {
 
     const [questions, setQuestions] = useState([])
     const addQuestion = (event) => {
-        setQuestions([...questions, Question()])
+        setQuestions([...questions, Question(questions.length)])
         console.log(event.target.parentNode.parentNode.children[1])
     }
     const formEvent = (event) => {
@@ -199,9 +199,8 @@ const Modal = ({ clsID, setUpdated, update }) => {
     )
 }
 
-const Question = () => {
-
-
+const Question = (len) => {
+    
 
     const addOption = (event) => {
         const value = event.target.parentNode.parentNode.children[0].children[0].children[1].value
@@ -215,7 +214,7 @@ const Question = () => {
 
         if (value == "Mupltiple Choice") {
             inpt.classList.add("radio", "radio-info")
-            inpt.name = "options"
+            inpt.name = len+"options"
             inpt.type = "radio"
         }
         else {
@@ -338,8 +337,8 @@ const CreateAutomaticQuiz = ({ clsID, setUpdated, update, aiQuestions }) => {
 
     const [questions, setQuestions] = useState([])
     const addQuestion = (event) => {
-        setQuestions([...questions, Question()])
-        console.log(event.target.parentNode.parentNode.children[1])
+        setQuestions([...questions, Question(questions.length)])
+        // console.log(event.target.parentNode.parentNode.children[1])
     }
     const formEvent = (event) => {
         event.preventDefault();
@@ -349,35 +348,37 @@ const CreateAutomaticQuiz = ({ clsID, setUpdated, update, aiQuestions }) => {
         setLoading(true)
         const classID = clsID
         const form = ref.current
-        const quizTitle = form.title
-        const quizDescription = form.description
+        const quizTitle = form.title.value
+        const quizDescription = form.description.value
 
-        const questionLength = event.target.parentNode.parentNode.parentNode.children[0].children[1].children.length
+        const questionsDiv = form.children[2]
         const questions = []
-        for (let i = 0; i < questionLength; i++) {
-            const questionTitle = form.questionTitle
-            const questionType = form.questionType
-            const optionsLength = form.options.children.length
+        console.log("HK: ", questionsDiv.children.length )
+        for (let i = 0; i < questionsDiv.children.length; i++) {
+            const questionTitle = questionsDiv.children[i].children[0].children[0].children[0].children[0].value
+            const questionType = questionsDiv.children[i].children[0].children[0].children[1].selectedOptions[0].value
+            const optionsDiv = questionsDiv.children[i].children[1].children[0]
             const options = []
             const answer = [];
-            for (let j = 0; j < optionsLength; j++) {
-                const op = event.target.parentNode.parentNode.parentNode.children[0].children[1].children[i].children[1].children[0].children[j];
+            for (let j = 0; j < optionsDiv.children.length; j++) {
+                const op = optionsDiv.children[j]
                 options.push(op.children[1].value.toString())
-                if (op.children[0].checked) answer.push(op.children[1].value.toString());
+                if (op.children[0].checked) answer.push(op.children[1].value.toString()); 
 
             }
             questions.push({ questionTitle, questionType, options, answer })
-        }
+        } 
         const createTime = getCurrentTime(new Date())
 
  
-        const slctdDeadline = event.target.parentNode.parentNode.parentNode.children[0].children[0].children[2].children[0].value
+        const slctdDeadline = form.deadline.value  
         const Deadline = getCurrentTime(new Date(slctdDeadline));
  
  
 
 
         const value = { classID, quizTitle, quizDescription, questions, createTime, Deadline }
+        console.log("HK: ", value)
 
 
         fetch('http://localhost:5000/createQuestions', {

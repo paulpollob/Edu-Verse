@@ -66,8 +66,8 @@ const Activities = () => {
 
                 <div className='flex items-center gap-5'>
                     <div className=' px-4 py-1 flex items-center'>
-                        <img className='w-8 h-8 rounded-xl border-2 border-slate-50' src='https://i.imgur.com/asLPUCK.jpg' alt='not found' />
-                        <img className='shadow-lg relative -left-3 w-9 h-9 rounded-xl border-2 border-slate-50 ' src='https://i.imgur.com/asLPUCK.jpg' alt='not found' />
+                        <img className='w-8 h-8 rounded-xl border-2 border-slate-50' src='https://i.ibb.co/KzC49TW/good-Education.png' alt='not found' />
+                        <img className='shadow-lg relative -left-3 w-9 h-9 rounded-xl border-2 border-slate-50 ' src='https://i.ibb.co/KzC49TW/good-Education.png' alt='not found' />
                         <div className='shadow-xl relative flex items-center justify-center -left-6 w-10 h-10 rounded-xl border-2 bg-slate-50' >+8 </div>
                     </div>
                     <button  className='bg-slate-50 hover:bg-slate-200 px-4 py-1'>To Calender</button>

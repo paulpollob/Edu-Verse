@@ -36,7 +36,7 @@ const StNavbar = () => {
                 {/* <MdNotifications className=' h-6 w-8' /> */}
                 <div className='mr-5'>
                     {/* <img title='Prokash Paul Pollob' src={user.img} className='w-9 h-9 rounded-lg' /> */}
-                    <p className='font-bold text-teal-600 text-xl'>{user.name}</p>
+                    <p className='font-bold text-teal-600 text-xl'>Koushik</p>
                 </div>
             </div>
         </div>
