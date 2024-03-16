@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import png from './../../../assets/logo.png'
 import { BsBrowserSafari } from 'react-icons/bs'
 import { FaChevronDown, FaSearch } from 'react-icons/fa'
@@ -32,12 +32,19 @@ const StNavbar = () => {
                 <img className="w-56" src="https://i.ibb.co/fMd12gB/logo.png" alt="logo" />
             </div>
             <div className='flex items-center gap-5'>
-                {/* <RiMessage2Fill className='h-6 w-8' /> */}
-                {/* <MdNotifications className=' h-6 w-8' /> */}
-                <div className='mr-5'>
-                    {/* <img title='Prokash Paul Pollob' src={user.img} className='w-9 h-9 rounded-lg' /> */}
-                    <p className='font-bold text-teal-600 text-xl'>Koushik</p>
+                <div className="dropdown dropdown-end">
+                    <div tabIndex={0} role="button" className='flex gap-3 bg-teal-50 p-2 rounded-xl'>
+                        {/* update user profile here? */}
+                        <img  src={user.img} className='w-8 h-6 shadow-2xl rounded-full' alt='not found' />
+                        <p className='font-bold text-teal-600 text-sm mr-2'>{user.name}</p>
+                        <FaChevronDown className='mt-1'/>
+                    </div>
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-white rounded-box w-52">
+                        <li><button className='cursor-pointer font-bold' onClick={signOute}>Logout</button></li>
+                        {/* <li><a>Item 2</a></li> */}
+                    </ul> 
                 </div>
+
             </div>
         </div>
     );

@@ -21,8 +21,7 @@ const TcNavbar = () => {
         setLoading(true)
         logOut()
         .then(() => {
-            setLoading(false)
-            // alert("HK signout")
+            setLoading(false) 
             navigate('/login')
           }).catch((error) => {
             alert("cann't sign out")
@@ -37,9 +36,10 @@ const TcNavbar = () => {
 
             <div className='flex items-center gap-5'>
                 <div className="dropdown dropdown-end">
-                    <div tabIndex={0} role="button" className='flex bg-teal-50 p-2 rounded-xl'>
-                        <img  src={profile} className='w-8 h-6 rounded-full' alt='not found' />
-                        <p className='font-bold text-teal-600 text-sm mr-2'>Koushik</p>
+                    <div tabIndex={0} role="button" className='flex gap-3 bg-teal-50 p-2 rounded-xl'>
+                        {/* update user profile here? */}
+                        <img  src={user.img} className='w-8 h-6 shadow-2xl rounded-full' alt='not found' />
+                        <p className='font-bold text-teal-600 text-sm mr-2'>{user.name}</p>
                         <FaChevronDown className='mt-1'/>
                     </div>
                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-white rounded-box w-52">

@@ -19,7 +19,8 @@ const StMain = () => {
 		<div>
 			{userLoading ?
 				<Load></Load> :<div className='p-5 min-w-screen min-h-screen rounded-lg bg-white'>
-				<TcNavbar></TcNavbar>
+				<StNavbar></StNavbar>
+				{/* <TcNavbar></TcNavbar> */}
 				<div className='flex gap-5'>
 					<div className='w-2/12'><StLeftSideBar></StLeftSideBar></div>
 					<div className='bg-slate-100 rounded-xl w-10/12 p-10 h-[36rem]'><Outlet></Outlet></div>

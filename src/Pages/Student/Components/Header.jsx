@@ -3,7 +3,7 @@ import React from 'react';
 const Header = () => {
     return (
         <div>
-            Hare Krishn from header
+            HK from header
         </div>
     );
 };
