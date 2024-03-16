@@ -432,7 +432,7 @@ const CreateAutomaticQuiz = ({ clsID, setUpdated, update, aiQuestions }) => {
                             <option disabled selected value="volvo">Select Questions</option>
 
                             {
-                                aiQuestions.map((q)=>
+                                aiQuestions?.map((q)=>
                                     <option value={q._id} >{q.topicName}</option>
                                 )
                             } 
